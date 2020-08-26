@@ -1,5 +1,4 @@
 # node_modules directory
 node_modules/
 src/config/auth.json
-src/config/config.json
 src/log/*
