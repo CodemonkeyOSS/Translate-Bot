@@ -2,6 +2,8 @@
 
 This project is a Discord bot that listens to a discord server for messages containing twitter links, and responds to them with translated links in english.
 
+UNDER DEVELOPMENT
+
 ## Configuration
 
 ### To run it
