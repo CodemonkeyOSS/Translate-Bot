@@ -16,6 +16,12 @@ const logger = Winston.createLogger({
   ]
 })
 
+if (process.env.HEROKU == 'enabled'){
+  logger.add(new Winston.transports.Console({
+    format: Winston.format.simple()
+  }))
+}
+
 /**
  * Setup the client and it's event methods.
  * Add handling for whenever we disconnet
