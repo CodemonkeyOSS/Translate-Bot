@@ -1,0 +1,6 @@
+{
+ "logger": {
+     "level": "info",
+     "file": "./log/translate-bot.log"
+ }   
+}

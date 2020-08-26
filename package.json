@@ -1,0 +1,23 @@
+{
+  "name": "translate-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "DISCORD_TRANSLATE_TOKEN=$DISCORD_TRANSLATE_TOKEN GOOGLE_TRANSLATE_KEY=$GOOGLE_TRANSLATE_KEY TWITTER_CONSUMER_KEY=$TWITTER_CONSUMER_KEY TWITTER_SECRET_KEY=$TWITTER_SECRET_KEY TWITTER_BEARER_TOKEN=$TWITTER_BEARER_TOKEN node src/app.js "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "discord.js": "^12.3.1",
+    "eslint": "^7.7.0",
+    "translate": "^1.1.2",
+    "twitter": "^1.7.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^8.1.2"
+  }
+}
