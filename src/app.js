@@ -87,7 +87,7 @@ function handleMessage(message) {
  */
 //TODO Support multiple links by putting all links into an array
 function getDistinctTwitterLinksInContent(msgContent) {
-  var regex = /https:\/\/(?:www\.)?twitter\.com\/(?<handle>[a-zA-Z0-9_]+)\/status\/(?<status_id>[0-9]+)/g
+  var regex = /https:\/\/(?:www\.)?(?:mobile\.)?twitter\.com\/(?<handle>[a-zA-Z0-9_]+)\/status\/(?<status_id>[0-9]+)/g
   let matches = []
   while((matchItem = regex.exec(msgContent)) != null) {
     matches.push(matchItem.groups)
