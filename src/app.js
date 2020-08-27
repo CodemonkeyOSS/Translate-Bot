@@ -2,6 +2,7 @@ var Discord = require('discord.js');
 var Winston = require('winston');
 var config = require('./config/config.json')
 var Twitter = require('twitter');
+const ISO6391 = require('iso-639-1');
 const utils = require('./utils')
 const translate = require('translate');
 
@@ -30,7 +31,6 @@ const client = new Discord.Client();
 
 // On Ready
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`)
   logger.info(`Logged into server as ${client.user.tag}`)
 })
 
@@ -87,7 +87,6 @@ function handleMessage(message) {
  */
 //TODO Support multiple links by putting all links into an array
 function getDistinctTwitterLinksInContent(msgContent) {
-  //console.log(msgContent)
   var regex = /https:\/\/(?:www\.)?twitter\.com\/(?<handle>[a-zA-Z0-9_]+)\/status\/(?<status_id>[0-9]+)/g
   let matches = []
   while((matchItem = regex.exec(msgContent)) != null) {
@@ -101,7 +100,7 @@ function translateAndSend(message, data) {
   logger.debug(`Generating metadata for handle: \"${data.handle}\", status_id: ${data.status_id}`)
   twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, function(error, tweets, response) {
     if(error) {
-      logger.error(error);
+      logger.error("Error communicating with twitter: "+error);
      } else {
       
       var jsonResponse = tweets
@@ -109,6 +108,12 @@ function translateAndSend(message, data) {
         logger.debug("Tweet is already classified as english/en, skipping.")
         return
       }
+      if (!ISO6391.validate(tweets.lang)) {
+        logger.error(`'${tweets.lang} is not a valid ISO-369.1 code. Skipping.'`)
+        message.reply(`What in tarnation is international code '${tweets.lang}'? Probably an error, let your bot admins know :D`)
+        return
+      }
+
       logger.debug(`Preparing to translate text: ${jsonResponse.full_text}`)
       params = {
         from: tweets.lang, 
