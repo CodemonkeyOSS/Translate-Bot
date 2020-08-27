@@ -110,7 +110,6 @@ function translateAndSend(message, data) {
       }
       if (!ISO6391.validate(tweets.lang)) {
         logger.error(`'${tweets.lang} is not a valid ISO-369.1 code. Skipping.'`)
-        message.reply(`What in tarnation is international code '${tweets.lang}'? Probably an error, let your bot admins know :D`)
         return
       }
 
