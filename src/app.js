@@ -108,17 +108,19 @@ function translateAndSend(message, data) {
         logger.debug("Tweet is already classified as english/en, skipping.")
         return
       }
-      if (!ISO6391.validate(tweets.lang)) {
-        logger.error(`'${tweets.lang} is not a valid ISO-369.1 code. Skipping.'`)
-        return
-      }
-
       logger.debug(`Preparing to translate text: ${jsonResponse.full_text}`)
-      params = {
-        from: tweets.lang, 
+
+      let params = {
         to: 'en',
         key: process.env.GOOGLE_TRANSLATE_KEY
       }
+      // Force from if we can assume it
+      if (ISO6391.validate(jsonResponse.lang)) {
+        params.from = tweets.lang
+      } else if (jsonResponse.lang === 'iw') {
+        params.from = 'he'
+      }
+      
       translate(tweets.full_text, params).then(res => { 
         var translated = res
         var mediaCount = '';
