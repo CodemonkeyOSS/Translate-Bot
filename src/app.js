@@ -117,9 +117,13 @@ function translateAndSend(message, data) {
       // Force from if we can assume it
       if (ISO6391.validate(jsonResponse.lang)) {
         params.from = tweets.lang
+      } else if (jsonResponse.lang === 'und') {
+        logger.debug("Language was undefined, ignoring for now.")
       } else if (jsonResponse.lang === 'iw') {
         params.from = 'he'
       }
+
+      //console.log(jsonResponse)
       
       translate(tweets.full_text, params).then(res => { 
         var translated = res
