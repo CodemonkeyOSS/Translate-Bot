@@ -119,6 +119,7 @@ function translateAndSend(message, data) {
         params.from = tweets.lang
       } else if (jsonResponse.lang === 'und') {
         logger.debug("Language was undefined, ignoring for now.")
+        return
       } else if (jsonResponse.lang === 'iw') {
         params.from = 'he'
       }
