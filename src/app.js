@@ -3,6 +3,7 @@ var Winston = require('winston');
 var config = require('./config/config.json')
 var Twitter = require('twitter');
 const ISO6391 = require('iso-639-1');
+const LanguageDetect = require('languagedetect');
 const utils = require('./utils')
 const translate = require('translate');
 
@@ -58,6 +59,12 @@ const twitter = new Twitter({
 })
 
 /**
+ * Build language detector object
+ */
+const lngDetector = new LanguageDetect();
+lngDetector.setLanguageType('iso2');
+
+/**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  * 
  * @param {Discord.message} message 
@@ -96,6 +103,28 @@ function getDistinctTwitterLinksInContent(msgContent) {
   return matches
 }
 
+function isTextCloseToEnglish(text) {
+  lngDetector.detect(text, 3).forEach( item => {
+    console.log(item[0])
+    if ( item[0].localeCompare('en') ) {
+      return true
+    }
+  })
+  return false
+}
+
+function maybeDetermineSrcLang(text, lang) {
+
+  if (ISO6391.validate(lang)) {
+    return lang
+  } else if (lang === 'iw') {
+    return 'he'
+  } else if (lang === 'und') {
+    logger.debug("Language was undefined, ignoring for now.")
+    return null
+  }
+}
+
 function translateAndSend(message, data) {
   logger.debug(`Generating metadata for handle: \"${data.handle}\", status_id: ${data.status_id}`)
   twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, function(error, tweets, response) {
@@ -110,18 +139,12 @@ function translateAndSend(message, data) {
       }
       logger.debug(`Preparing to translate text: ${jsonResponse.full_text}`)
 
+      console.log(isTextCloseToEnglish(jsonResponse.full_text, 'en'))
+
       let params = {
+        from: maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang),
         to: 'en',
         key: process.env.GOOGLE_TRANSLATE_KEY
-      }
-      // Force from if we can assume it
-      if (ISO6391.validate(jsonResponse.lang)) {
-        params.from = tweets.lang
-      } else if (jsonResponse.lang === 'und') {
-        logger.debug("Language was undefined, ignoring for now.")
-        return
-      } else if (jsonResponse.lang === 'iw') {
-        params.from = 'he'
       }
 
       //console.log(jsonResponse)
