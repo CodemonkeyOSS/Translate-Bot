@@ -2,5 +2,8 @@
     "logger": {
         "level": "debug",
         "file": "./log/translate-bot.log"
-    }   
+    }   ,
+    "translation": {
+        "numberOfLanguages": 3
+    }
 }

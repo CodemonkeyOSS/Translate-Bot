@@ -71,17 +71,14 @@ lngDetector.setLanguageType('iso2');
  */
 function handleMessage(message) {
   if (message.author.id === client.id) {
-    logger.debug("Discarding message from myself")
     return
   }
   var twitterLinks = getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
-    logger.debug(`Discovered ${twitterLinks.length} links in this message`)
     twitterLinks.forEach( data => {
       translateAndSend(message, data)
     })
   } else {
-    logger.debug(`Discovered no twitter links in this message, discarding.`)
     return
   }
 }
@@ -104,56 +101,55 @@ function getDistinctTwitterLinksInContent(msgContent) {
 }
 
 function isTextCloseToEnglish(text) {
-  lngDetector.detect(text, 3).forEach( item => {
-    console.log(item[0])
-    if ( item[0].localeCompare('en') ) {
+  let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
+  for (const item of topMatches) {
+    if ( item[0] === 'en' ) {
+      logger.debug(`Text matched english with a score of ${item[1]}`)
       return true
     }
-  })
+  }
   return false
 }
 
 function maybeDetermineSrcLang(text, lang) {
-
-  if (ISO6391.validate(lang)) {
-    return lang
-  } else if (lang === 'iw') {
-    return 'he'
-  } else if (lang === 'und') {
-    logger.debug("Language was undefined, ignoring for now.")
-    return null
+  if ( isTextCloseToEnglish(text) ) {
+    logger.debug("Text seems to match english already, so assuming english")
+    return 'en'
+  } else {
+    if (ISO6391.validate(lang)) {
+      return lang
+    } else if (lang === 'iw') {
+      return 'he'
+    } else if (lang === 'und') {
+      return null
+    }
   }
 }
 
 function translateAndSend(message, data) {
-  logger.debug(`Generating metadata for handle: \"${data.handle}\", status_id: ${data.status_id}`)
   twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, function(error, tweets, response) {
     if(error) {
       logger.error("Error communicating with twitter: "+error);
      } else {
       
       var jsonResponse = tweets
-      if (jsonResponse.lang == 'en') {
-        logger.debug("Tweet is already classified as english/en, skipping.")
+      let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
+      logger.debug(`Language is suspected to be: ${possibleLang}`)
+      if (possibleLang == 'en') {
         return
       }
-      logger.debug(`Preparing to translate text: ${jsonResponse.full_text}`)
-
-      console.log(isTextCloseToEnglish(jsonResponse.full_text, 'en'))
 
       let params = {
-        from: maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang),
+        from: possibleLang,
         to: 'en',
         key: process.env.GOOGLE_TRANSLATE_KEY
       }
 
       //console.log(jsonResponse)
       
-      translate(tweets.full_text, params).then(res => { 
+      translate(tweets.full_text, params).then(res => {
         var translated = res
-        var mediaCount = '';
         if (jsonResponse.hasOwnProperty(jsonResponse.entities.media) == false) {
-          logger.debug(`translated text: `+res)
           var replyMessage = new Discord.MessageEmbed()
             .setColor(0x00afff)
             .setAuthor(
@@ -166,7 +162,7 @@ function translateAndSend(message, data) {
               "____________________",
               utils.prettyPrintDate(jsonResponse.created_at)
             )
-            .setFooter("Translated From Twitter Using Google Cloud Translate")
+            .setFooter(`Translated From Twitter Using Google Cloud Translate`)
         }
         message.reply(replyMessage)
       })
