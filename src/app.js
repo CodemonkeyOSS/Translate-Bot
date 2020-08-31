@@ -106,9 +106,20 @@ function getDistinctTwitterLinksInContent(msgContent) {
 
 function isTextCloseToEnglish(text) {
   let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
+  console.log(topMatches)
   for (const item of topMatches) {
     if ( item[0] === 'en' ) {
       logger.debug(`Text matched english with a score of ${item[1]}`)
+      return true
+    }
+  }
+  return false
+}
+
+function isTweetCompletelyFuckingUseless(text) {
+  let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
+  for (const item of topMatches) {
+    if ( item[0] === null ) {
       return true
     }
   }
@@ -161,6 +172,11 @@ function translateAndSend(message, data) {
 
       if ( containsOnlyLink(jsonResponse.full_text) ) {
         logger.debug("Tweet contains only a link, ignoring.")
+        return
+      }
+
+      if ( isTweetCompletelyFuckingUseless(jsonResponse.full_text) ) {
+        logger.debug("This tweet is literally useless, let's trash it and see who yells")
         return
       }
 
