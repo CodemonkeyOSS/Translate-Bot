@@ -100,6 +100,10 @@ function getDistinctTwitterLinksInContent(msgContent) {
   return matches
 }
 
+/*
+  Language processing functions
+*/
+
 function isTextCloseToEnglish(text) {
   let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
   for (const item of topMatches) {
@@ -126,6 +130,27 @@ function maybeDetermineSrcLang(text, lang) {
   }
 }
 
+/*
+  Is this just a single link in the tweet?
+*/
+function containsOnlyLink(text) {
+  var regexTwitterShort = /^https:\/\/t\.co\/[a-zA-Z]+$/
+  while((matchItem = regexTwitterShort.exec(text)) != null) {
+    if ( matchItem[0] === text) return true
+  }
+
+  var regexOnlyUrl = /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/
+  while((matchItem = regexOnlyUrl.exec(text)) != null) {
+    if ( matchItem[0] === text ) return true
+  }
+  
+  return false
+}
+
+/*
+  Meat and taters function
+*/
+
 function translateAndSend(message, data) {
   twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, function(error, tweets, response) {
     if(error) {
@@ -133,12 +158,18 @@ function translateAndSend(message, data) {
      } else {
       
       var jsonResponse = tweets
+
+      if ( containsOnlyLink(jsonResponse.full_text) ) {
+        logger.debug("Tweet contains only a link, ignoring.")
+        return
+      }
+
+      // Process language metadata and decide on source language
       let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
       logger.debug(`Language is suspected to be: ${possibleLang}`)
       if (possibleLang == 'en') {
         return
       }
-
       let params = {
         from: possibleLang,
         to: 'en',
