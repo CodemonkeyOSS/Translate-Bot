@@ -116,7 +116,8 @@ function isTextCloseToEnglish(text) {
 }
 
 function isTweetCompletelyFuckingUseless(text) {
-  let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
+  let topMatches = lngDetector.detect(text, 2)
+  //logger.debug(topMatches)
   for (const item of topMatches) {
     if ( item[0] === null ) {
       return true
@@ -134,7 +135,11 @@ function maybeDetermineSrcLang(text, lang) {
       return lang
     } else if (lang === 'iw') {
       return 'he'
-    } else if (lang === 'und') {
+    } else {
+      if ( isTweetCompletelyFuckingUseless(text) ) {
+        logger.debug("This tweet is literally useless, let's trash it and see who yells")
+        return
+      }
       return null
     }
   }
@@ -174,10 +179,7 @@ function translateAndSend(message, data) {
         return
       }
 
-      if ( isTweetCompletelyFuckingUseless(jsonResponse.full_text) ) {
-        logger.debug("This tweet is literally useless, let's trash it and see who yells")
-        return
-      }
+      //console.log(jsonResponse)
 
       // Process language metadata and decide on source language
       let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
