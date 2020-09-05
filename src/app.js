@@ -189,7 +189,7 @@ function translateAndSend(message, data) {
         return
       }
 
-      console.log(jsonResponse)
+      //console.log(jsonResponse)
 
       // Process language metadata and decide on source language
       let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
