@@ -40,7 +40,12 @@ client.on('ready', () => {
 client.on('message', function(message) {
   if (message.mentions.has(client.user)) {
     message.reply(InsultCompliment.Insult());
-  } else {
+  } else if (message.author == 646892924084420611) {
+    const content = message.content.toLowerCase()
+    if ( message.content.includes("elon") || message.content.includes("musk") ) {
+      message.reply("Did Elon hand deliver your knee pads to say that?")
+    }
+  }else {
     handleMessage(message);
   }
 })
