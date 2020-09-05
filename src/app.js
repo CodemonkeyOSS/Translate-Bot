@@ -6,6 +6,7 @@ const ISO6391 = require('iso-639-1');
 const LanguageDetect = require('languagedetect');
 const utils = require('./utils')
 const translate = require('translate');
+const InsultCompliment = require("insult-compliment");
 
 /**
  * Setup the logger service so we can get dank loggies
@@ -37,7 +38,11 @@ client.on('ready', () => {
 
 // On Message
 client.on('message', function(message) {
-  handleMessage(message);
+  if (message.mentions.has(client.user)) {
+    message.reply(InsultCompliment.Insult());
+  } else {
+    handleMessage(message);
+  }
 })
 
 // On Fiery Death, log and attempt another login
@@ -179,7 +184,7 @@ function translateAndSend(message, data) {
         return
       }
 
-      //console.log(jsonResponse)
+      console.log(jsonResponse)
 
       // Process language metadata and decide on source language
       let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
