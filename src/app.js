@@ -41,6 +41,7 @@ client.on('message', function(message) {
   if (message.mentions.has(client.user)) {
     message.reply(InsultCompliment.Insult());
   } else if (message.author == 646892924084420611) {
+    logger.debug("tt3 talked")
     const content = message.content.toLowerCase()
     if ( message.content.includes("elon") || message.content.includes("musk") ) {
       message.reply("Did Elon hand deliver your knee pads to say that?")
@@ -188,8 +189,6 @@ function translateAndSend(message, data) {
         logger.debug("Tweet contains only a link, ignoring.")
         return
       }
-
-      //console.log(jsonResponse)
 
       // Process language metadata and decide on source language
       let possibleLang = maybeDetermineSrcLang(jsonResponse.full_text, jsonResponse.lang)
