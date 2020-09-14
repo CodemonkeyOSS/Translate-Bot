@@ -40,11 +40,8 @@ client.on('ready', () => {
 client.on('message', function(message) {
   if (message.mentions.has(client.user)) {
     message.reply(InsultCompliment.Insult());
-  } else if (message.author == 646892924084420611) {
-    const content = message.content.toLowerCase()
-    if ( content.includes("elon") || content.includes("musk") ) {
-      message.reply("Did Elon hand deliver your knee pads to say that?")
-    }
+  } else if (message.author == 251883305362915328) {
+    message.reply(InsultCompliment.Compliment());
   }else {
     handleMessage(message);
   }
