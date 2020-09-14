@@ -39,9 +39,11 @@ client.on('ready', () => {
 // On Message
 client.on('message', function(message) {
   if (message.mentions.has(client.user)) {
-    message.reply(InsultCompliment.Insult());
-  } else if (message.author == 251883305362915328) {
-    message.reply(InsultCompliment.Compliment());
+    if (message.author == 251883305362915328) {
+      message.reply(InsultCompliment.Compliment());
+    } else {
+      message.reply(InsultCompliment.Insult());
+    }
   }else {
     handleMessage(message);
   }
