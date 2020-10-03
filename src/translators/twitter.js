@@ -94,8 +94,6 @@ function translateAndSend(logger, message, data) {
           to: 'en',
           key: process.env.GOOGLE_TRANSLATE_KEY
         }
-  
-        console.log(jsonResponse)
         
         translate(tweets.full_text, params).then(res => {
           var translated = res
