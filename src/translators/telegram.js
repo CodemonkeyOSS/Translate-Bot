@@ -1,14 +1,8 @@
-var { MTProto } = require('@mtproto/core');
 var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
 var detection = require('./detection');
 var Discord = require('discord.js');
 const translate = require('translate');
-
-var tg = new MTProto({ 
-    api_id: process.env.TG_APP_ID, 
-    api_hash: process.env.TG_API_HASH
-})
 
 function getDistinctTelegramLinksInContent(msgContent) {
     var regex = /https:\/\/(?:www\.)?t\.me\/(?<channel>[a-zA-Z0-9_]+)\/(?<messageId>[0-9]+)/g
