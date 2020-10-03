@@ -18,13 +18,13 @@ function maybeDetermineSrcLang(logger, text, lang) {
         } else if (lang === 'iw') {
             return 'he'
         } else {
-            if ( isTweetCompletelyFuckingUseless(text) ) {
-            logger.debug("This tweet is literally useless, let's trash it and see who yells")
-            return
-        }
             return null
         }
     }
+}
+
+function detectLanguage(text) {
+    return lngDetector.detect(text, 1)[0][0]
 }
 
 function isTextCloseToEnglish(text) {
@@ -38,3 +38,5 @@ function isTextCloseToEnglish(text) {
   }
 
 exports.maybeDetermineSrcLang = maybeDetermineSrcLang;
+exports.detectLanguage = detectLanguage;
+exports.isTextCloseToEnglish = isTextCloseToEnglish;

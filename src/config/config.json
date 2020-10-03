@@ -4,7 +4,10 @@
         "file": "./log/translate-bot.log"
     },
     "translation": {
-        "numberOfLanguages": 3
+        "numberOfLanguages": 3,
+        "twitter": true,
+        "telegram": true,
+        "anyEmbed": false
     },
     "screwWithNolsters": true
 }

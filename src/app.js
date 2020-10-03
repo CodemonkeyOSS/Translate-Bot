@@ -2,6 +2,7 @@ var Discord = require('discord.js');
 var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
+var telegramTranslator = require('./translators/telegram');
 const InsultCompliment = require("insult-compliment");
 
 /**
@@ -34,6 +35,7 @@ client.on('ready', () => {
 
 // On Message
 client.on('message', function(message) {
+
   if (message.author.id === client.id) {
     return
   }
@@ -44,8 +46,13 @@ client.on('message', function(message) {
     } else {
       message.reply(InsultCompliment.Insult());
     }
-  }else if (twitterTranslator.doTwitterLinksExistInContent(message)) {
-    twitterTranslator.handleMessage(logger, message);
+  } else {
+    if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
+      twitterTranslator.handleMessage(logger, message);
+    }
+    if (telegramTranslator.doTelegramLinksExistInContent(message) && config.translation.telegram) {
+      telegramTranslator.handleMessage(logger, message);
+    }
   }
 })
 
