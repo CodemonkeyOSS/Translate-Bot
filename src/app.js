@@ -4,6 +4,9 @@ var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var telegramTranslator = require('./translators/telegram');
 const InsultCompliment = require("insult-compliment");
+const { promisify } = require('util')
+
+const sleep = promisify(setTimeout)
 
 /**
  * Setup the logger service so we can get dank loggies
@@ -34,7 +37,8 @@ client.on('ready', () => {
 })
 
 // On Message
-client.on('message', function(message) {
+client.on('message', async function(message) {
+  sleep(2000)
 
   if (message.author.id === client.id) {
     return

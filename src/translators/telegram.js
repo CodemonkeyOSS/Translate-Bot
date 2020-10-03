@@ -34,7 +34,7 @@ function handleMessage(logger, message) {
 
         // Let Translate figure out the source, as we don't have a way to get the src lang from embeds
         let params = {
-            from: detection.detectLanguage(embed.description),
+            from: detection.detectLanguage(embed.description)[0][0],
             to: 'en',
             key: process.env.GOOGLE_TRANSLATE_KEY
         }

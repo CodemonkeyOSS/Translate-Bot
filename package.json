@@ -16,6 +16,7 @@
     "insult-compliment": "^1.1.4",
     "iso-639-1": "^2.1.4",
     "languagedetect": "^2.0.0",
+    "promisfy": "^1.2.0",
     "translate": "^1.1.2",
     "twitter": "^1.7.1",
     "winston": "^3.3.3"

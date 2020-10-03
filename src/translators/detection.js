@@ -24,7 +24,7 @@ function maybeDetermineSrcLang(logger, text, lang) {
 }
 
 function detectLanguage(text) {
-    return lngDetector.detect(text, 1)[0][0]
+    return lngDetector.detect(text, config.translation.numberOfLanguages)
 }
 
 function isTextCloseToEnglish(text) {
