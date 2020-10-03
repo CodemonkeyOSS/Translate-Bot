@@ -31,7 +31,6 @@ function isTextCloseToEnglish(text) {
     let topMatches = lngDetector.detect(text, config.translation.numberOfLanguages)
     for (const item of topMatches) {
       if ( item[0] === 'en' ) {
-        logger.debug(`Text matched english with a score of ${item[1]}`)
         return true
       }
     }
