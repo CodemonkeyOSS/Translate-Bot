@@ -1,4 +1,5 @@
 const LanguageDetect = require('languagedetect');
+const translate = require('@vitalets/google-translate-api');
 const ISO6391 = require('iso-639-1');
 var config = require('../config/config.json');
 
@@ -23,8 +24,16 @@ function maybeDetermineSrcLang(logger, text, lang) {
     }
 }
 
-function detectLanguage(text) {
-    return lngDetector.detect(text, config.translation.numberOfLanguages)
+async function detectLanguage(text) {
+    let lang = ''
+    await translate(text, {to: 'en'}).then(res => {
+        if ( res.from.language.iso == 'iw') {
+            lang = 'he'
+        } else {
+            lang = res.from.language.iso
+        }
+    })
+    return lang
 }
 
 function isTextCloseToEnglish(text) {

@@ -32,31 +32,32 @@ function handleMessage(logger, message) {
         
         if (detection.isTextCloseToEnglish(embed.description)) return
 
-        // Let Translate figure out the source, as we don't have a way to get the src lang from embeds
-        let params = {
-            from: detection.detectLanguage(embed.description)[0][0],
-            to: 'en',
-            key: process.env.GOOGLE_TRANSLATE_KEY
-        }
-        
-        translate(embed.description, params).then(res => {
-            var translated = res
-            var data = parseHandleAndIdFromLink(embed.url)
-            var replyMessage = new Discord.MessageEmbed()
-                .setColor(0x3489eb)
-                .setAuthor(
-                    data.channel,
-                    embed.thumbnail.url,
-                    embed.url
-                )
-                .setDescription(translated)
-                .addField(
-                    "____________________",
-                    "**Timestamp not provided, please ensure recency of message.**"
-                )
-                .setFooter(`Translated From Telegram Using Google Cloud Translate with Love from CodeMonkey`)
+        detection.detectLanguage(embed.description).then(res => {
+            let params = {
+                from: res,
+                to: 'en',
+                key: process.env.GOOGLE_TRANSLATE_KEY
+            }
 
-            message.reply(replyMessage)
+            translate(embed.description, params).then(res => {
+                var translated = res
+                var data = parseHandleAndIdFromLink(embed.url)
+                var replyMessage = new Discord.MessageEmbed()
+                    .setColor(0x3489eb)
+                    .setAuthor(
+                        data.channel,
+                        embed.thumbnail.url,
+                        embed.url
+                    )
+                    .setDescription(translated)
+                    .addField(
+                        "____________________",
+                        "**Timestamp not provided, please ensure recency of message.**"
+                    )
+                    .setFooter(`Translated From Telegram Using Google Cloud Translate with Love from CodeMonkey`)
+    
+                message.reply(replyMessage)
+            })
         })
     });
 }
