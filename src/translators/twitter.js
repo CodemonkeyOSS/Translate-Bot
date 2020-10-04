@@ -110,7 +110,7 @@ function translateAndSend(logger, message, data) {
                 "____________________",
                 dateUtils.prettyPrintDate(jsonResponse.created_at)
               )
-              .setFooter(`**Translated From Twitter Using Google Cloud Translate**`)
+              .setFooter(`Translated From Twitter Using Google Cloud Translate`)
           }
           message.reply(replyMessage)
         })
