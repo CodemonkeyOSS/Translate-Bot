@@ -3,6 +3,7 @@ var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var telegramTranslator = require('./translators/telegram');
+var messageUtils = require('./utils/message-utils');
 const InsultCompliment = require("insult-compliment");
 const { promisify } = require('util')
 
@@ -38,11 +39,8 @@ client.on('ready', () => {
 
 // On Message
 client.on('message', async function(message) {
-  sleep(2000)
 
-  if (message.author.id === client.id) {
-    return
-  }
+  if (message.author.id === client.id) return
 
   if (message.mentions.has(client.user)) {
     if (message.author == 251883305362915328) {
@@ -51,13 +49,17 @@ client.on('message', async function(message) {
       message.reply(InsultCompliment.Insult());
     }
   } else {
-    if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
-      twitterTranslator.handleMessage(logger, message);
-    }
-    if (telegramTranslator.doTelegramLinksExistInContent(message) && config.translation.telegram) {
-      if (message.embeds.length <= 0) logger.warn("Encountered telegram detection with no embeds, message was:\n" + message)
-      telegramTranslator.handleMessage(logger, message);
-    }
+    await sleep(2000)
+    message.fetch(true).then( updatedMsg => {
+        if (twitterTranslator.doTwitterLinksExistInContent(updatedMsg) && config.translation.twitter) {
+          twitterTranslator.handleMessage(logger, updatedMsg);
+        }
+        if (telegramTranslator.doTelegramLinksExistInContent(updatedMsg) && config.translation.telegram) {
+          console.log(updatedMsg)
+          telegramTranslator.handleMessage(logger, updatedMsg);
+        }
+    })
+    
   }
 })
 
