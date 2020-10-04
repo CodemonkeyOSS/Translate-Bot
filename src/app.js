@@ -55,6 +55,7 @@ client.on('message', async function(message) {
       twitterTranslator.handleMessage(logger, message);
     }
     if (telegramTranslator.doTelegramLinksExistInContent(message) && config.translation.telegram) {
+      if (message.embeds.length <= 0) logger.warn("Encountered telegram detection with no embeds, message was:\n" + message)
       telegramTranslator.handleMessage(logger, message);
     }
   }
