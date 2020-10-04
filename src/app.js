@@ -48,17 +48,22 @@ client.on('message', async function(message) {
     } else {
       message.reply(InsultCompliment.Insult());
     }
-  } else {
-    await sleep(2000)
-    message.fetch(force=true).then( updatedMsg => {
-        if (twitterTranslator.doTwitterLinksExistInContent(updatedMsg) && config.translation.twitter) {
-          twitterTranslator.handleMessage(logger, updatedMsg);
-        }
-        if (telegramTranslator.doTelegramLinksExistInContent(updatedMsg) && config.translation.telegram) {
-          telegramTranslator.handleMessage(logger, updatedMsg);
-        }
-    })
-    
+  } else {   
+      if (twitterTranslator.doTwitterLinksExistInContent(updatedMsg) && config.translation.twitter) {
+        twitterTranslator.handleMessage(logger, updatedMsg);
+      } else {
+        // Sleep before checking embeds
+        await sleep(2000)
+        // Forcefully check for updated message from API
+        message.fetch(force=true).then( updatedMsg => {
+          if (telegramTranslator.doTelegramLinksExistInContent(updatedMsg) && config.translation.telegram) {
+            if ( updatedMsg.embeds.length <= 0) {
+              logger.info("Still didn't get embeds for telegram after sleeping. Consider increasing delay?")
+            }
+            telegramTranslator.handleMessage(logger, updatedMsg);
+          }
+        })
+      }   
   }
 })
 
