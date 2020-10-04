@@ -50,12 +50,11 @@ client.on('message', async function(message) {
     }
   } else {
     await sleep(2000)
-    message.fetch(true).then( updatedMsg => {
+    message.fetch(force=true).then( updatedMsg => {
         if (twitterTranslator.doTwitterLinksExistInContent(updatedMsg) && config.translation.twitter) {
           twitterTranslator.handleMessage(logger, updatedMsg);
         }
         if (telegramTranslator.doTelegramLinksExistInContent(updatedMsg) && config.translation.telegram) {
-          console.log(updatedMsg)
           telegramTranslator.handleMessage(logger, updatedMsg);
         }
     })
