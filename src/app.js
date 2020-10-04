@@ -49,8 +49,8 @@ client.on('message', async function(message) {
       message.reply(InsultCompliment.Insult());
     }
   } else {   
-      if (twitterTranslator.doTwitterLinksExistInContent(updatedMsg) && config.translation.twitter) {
-        twitterTranslator.handleMessage(logger, updatedMsg);
+      if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
+        twitterTranslator.handleMessage(logger, message);
       } else {
         // Sleep before checking embeds
         await sleep(2000)
