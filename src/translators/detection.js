@@ -9,13 +9,13 @@ var config = require('../config/config.json');
 const lngDetector = new LanguageDetect();
 lngDetector.setLanguageType('iso2');
 
-function maybeDetermineSrcLang(logger, text, lang) {
+async function maybeDetermineSrcLang(logger, text, lang) {
     if ( isTextCloseToEnglish(text) ) {
         logger.debug("Text seems to match english already, so assuming english")
         return 'en'
     } else {
-        var secondaryLang = detectLanguage(text)
-        
+        var secondaryLang = await detectLanguage(text)
+
         if (ISO6391.validate(lang)) return lang
         else if (lang === 'iw') return 'he'
         else if (secondaryLang != null) return secondaryLang
