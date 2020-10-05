@@ -13,14 +13,8 @@ async function maybeDetermineSrcLang(logger, text, lang) {
     if ( isTextCloseToEnglish(text) ) {
         logger.debug("Text seems to match english already, so assuming english")
         return 'en'
-    } else {
-
-        var secondaryLang = await detectLanguage(text)
-
-        if (ISO6391.validate(lang)) return lang
-        else if (secondaryLang != null) return secondaryLang
-        else return null
     }
+    return await detectLanguage(text)
 }
 
 async function detectLanguage(text) {
