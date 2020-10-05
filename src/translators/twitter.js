@@ -56,11 +56,11 @@ function isTweetCompletelyFuckingUseless(text) {
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-function handleMessage(logger, message) {
+async function handleMessage(logger, message) {
   var twitterLinks = getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
       twitterLinks.forEach( data => {
-          translateAndSend(logger, message, data)
+          await translateAndSend(logger, message, data)
       })
   } else {
       return
@@ -71,7 +71,7 @@ function handleMessage(logger, message) {
   Meat and taters function
 */
 function translateAndSend(logger, message, data) {
-    twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, function(error, tweets, response) {
+    twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, async function(error, tweets, response) {
       if(error) {
         logger.error("Error communicating with twitter: "+error);
        } else {
@@ -84,7 +84,7 @@ function translateAndSend(logger, message, data) {
         }
   
         // Process language metadata and decide on source language
-        let possibleLang = detection.maybeDetermineSrcLang(logger, jsonResponse.full_text, jsonResponse.lang)
+        let possibleLang = await detection.maybeDetermineSrcLang(logger, jsonResponse.full_text, jsonResponse.lang)
         logger.debug(`Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
           return
