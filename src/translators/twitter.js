@@ -56,11 +56,11 @@ function isTweetCompletelyFuckingUseless(text) {
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-async function handleMessage(logger, message) {
+function handleMessage(logger, message) {
   var twitterLinks = getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
       twitterLinks.forEach( data => {
-          await translateAndSend(logger, message, data)
+          translateAndSend(logger, message, data)
       })
   } else {
       return
@@ -70,7 +70,7 @@ async function handleMessage(logger, message) {
 /*
   Meat and taters function
 */
-function translateAndSend(logger, message, data) {
+async function translateAndSend(logger, message, data) {
     twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, async function(error, tweets, response) {
       if(error) {
         logger.error("Error communicating with twitter: "+error);

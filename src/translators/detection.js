@@ -14,25 +14,23 @@ async function maybeDetermineSrcLang(logger, text, lang) {
         logger.debug("Text seems to match english already, so assuming english")
         return 'en'
     } else {
+
         var secondaryLang = await detectLanguage(text)
 
         if (ISO6391.validate(lang)) return lang
-        else if (lang === 'iw') return 'he'
         else if (secondaryLang != null) return secondaryLang
         else return null
     }
 }
 
 async function detectLanguage(text) {
-    let lang = ''
-    await translate(text, {to: 'en'}).then(res => {
-        if ( res.from.language.iso == 'iw') {
-            lang = 'he'
-        } else {
-            lang = res.from.language.iso
-        }
-    })
-    return lang
+    let res = await translate(text, {to: 'en'})
+    if ( res.from.language.iso == 'iw') {
+        return 'he'
+    } else {
+        return res.from.language.iso
+    }
+    
 }
 
 function isTextCloseToEnglish(text) {
