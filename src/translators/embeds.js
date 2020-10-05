@@ -31,7 +31,7 @@ async function handleMessage(logger, message) {
     for (const embed of message.embeds) {
         let possibleLang = await detection.detectLanguage(embed.description)
 
-        logger.debug(`[TELEGRAM] Language is suspected to be: ${possibleLang}`)
+        logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
             return
         }
@@ -42,26 +42,49 @@ async function handleMessage(logger, message) {
             key: process.env.GOOGLE_TRANSLATE_KEY
         }
 
-        translate(embed.description, params).then(res => {
-            var translated = res
-            var data = parseHandleAndIdFromLink(embed.url)
-            var replyMessage = new Discord.MessageEmbed()
-                .setColor(0x3489eb)
-                .setAuthor(
-                    data.channel,
-                    embed.thumbnail.url,
-                    embed.url
-                )
-                .setDescription(translated)
-                .addField(
-                    "____________________",
-                    "**Timestamp not provided, please ensure recency of message.**"
-                )
-                .setFooter(`Translated From Telegram Using Google Cloud Translate with Love from CodeMonkey`)
+        console.log(embed)
 
-            message.reply(replyMessage)
-        })
+        let title = ''
+        if (embed.title) {
+            title = await checkAndTranslate(embed.title)
+        }
+        let description = ''
+        if (embed.description) {
+            description = await checkAndTranslate(embed.description)
+        }
+
+        var replyMessage = new Discord.MessageEmbed()
+            .setColor(0xf542f5)
+            .setTitle(title)
+            .setDescription(description)
+            .setFooter(`Translated Using Google Cloud Translate with Love from CodeMonkey`)
+        if (embed.author) {
+            replyMessage.setAuthor(
+                embed.author.name,
+                embed.thumbnail.url,
+                embed.url
+            )
+        } else if (embed.provider && embed.provider.name) {
+            replyMessage.setAuthor(embed.provider.name)
+        }
+
+        message.reply(replyMessage)
     }
+}
+
+async function checkAndTranslate(text) {
+    let possibleLang = await detection.detectLanguage(text)
+    if (possibleLang == 'en') {
+        return text
+    }
+    
+    let params = {
+        from: possibleLang,
+        to: 'en',
+        key: process.env.GOOGLE_TRANSLATE_KEY
+    }
+
+    return await translate(text, params)
 }
 
 exports.doTelegramLinksExistInContent = doTelegramLinksExistInContent;
