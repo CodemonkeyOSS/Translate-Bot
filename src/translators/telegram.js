@@ -26,7 +26,7 @@ function parseHandleAndIdFromLink(url) {
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-function handleMessage(logger, message) {
+async function handleMessage(logger, message) {
 
     message.embeds.forEach(embed => {
         let possibleLang = detection.detectLanguage(embed.description)
@@ -42,7 +42,7 @@ function handleMessage(logger, message) {
             key: process.env.GOOGLE_TRANSLATE_KEY
         }
 
-        let translated = translate(embed.description, params)
+        let translated = await translate(embed.description, params)
         var data = parseHandleAndIdFromLink(embed.url)
         var replyMessage = new Discord.MessageEmbed()
             .setColor(0x3489eb)
