@@ -84,8 +84,8 @@ async function translateAndSend(logger, message, data) {
         }
   
         // Process language metadata and decide on source language
-        let possibleLang = await detection.maybeDetermineSrcLang(logger, jsonResponse.full_text, jsonResponse.lang)
-        logger.debug(`Language is suspected to be: ${possibleLang}`)
+        let possibleLang = await detection.detectLanguage(jsonResponse.full_text)
+        logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
           return
         }
