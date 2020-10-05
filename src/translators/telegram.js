@@ -29,7 +29,7 @@ function parseHandleAndIdFromLink(url) {
 function handleMessage(logger, message) {
 
     message.embeds.forEach(embed => {
-        let possibleLang = detection.detectLanguage(embed.description)
+        let possibleLang = await detection.detectLanguage(embed.description)
 
         logger.debug(`[TELEGRAM] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
