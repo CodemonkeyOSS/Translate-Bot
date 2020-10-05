@@ -26,7 +26,7 @@ function parseHandleAndIdFromLink(url) {
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-function handleMessage(logger, message) {
+async function handleMessage(logger, message) {
 
     message.embeds.forEach(embed => {
         let possibleLang = await detection.detectLanguage(embed.description)

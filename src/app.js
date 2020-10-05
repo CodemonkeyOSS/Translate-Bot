@@ -66,7 +66,7 @@ client.on('message', async function(message) {
           }
         }
         if (config.translation.telegram) {
-          telegramTranslator.handleMessage(logger, updatedMsg);
+          await telegramTranslator.handleMessage(logger, updatedMsg);
         }
       }
   }
