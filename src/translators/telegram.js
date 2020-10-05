@@ -28,7 +28,7 @@ function parseHandleAndIdFromLink(url) {
  */
 async function handleMessage(logger, message) {
 
-    message.embeds.forEach(embed => {
+    for (const embed of message.embeds) {
         let possibleLang = await detection.detectLanguage(embed.description)
 
         logger.debug(`[TELEGRAM] Language is suspected to be: ${possibleLang}`)
@@ -61,7 +61,7 @@ async function handleMessage(logger, message) {
 
             message.reply(replyMessage)
         })
-    });
+    }
 }
 
 exports.doTelegramLinksExistInContent = doTelegramLinksExistInContent;
