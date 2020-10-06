@@ -13,6 +13,15 @@ function containsOnlyLink(text) {
     }
     
     return false
+}
+
+function containsAnyLink(text) {
+  var regexOnlyUrl = /^((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/
+  while((matchItem = regexOnlyUrl.exec(text)) != null) {
+    if ( matchItem[0] === text ) return true
   }
+  return false
+}
 
 exports.containsOnlyLink = containsOnlyLink;
+exports.containsAnyLink = containsAnyLink;
