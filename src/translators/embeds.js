@@ -59,7 +59,7 @@ async function handleMessage(logger, message) {
                 embed.url
             )
         } else if (embed.provider && embed.provider.name) {
-            replyMessage.setßAuthor(embed.provider.name)
+            replyMessage.setAuthor(embed.provider.name)
         }
         if (embed.url) replyMessage.url = embed.url
         if (embed.thumbnail) replyMessage.image = embed.thumbnail

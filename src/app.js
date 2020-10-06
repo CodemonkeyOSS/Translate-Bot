@@ -106,11 +106,11 @@ function insultOrComplimentCommand(message) {
   }
 }
 
-function processMessageTranslations(message) {
+async function processMessageTranslations(message) {
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
     twitterTranslator.handleMessage(logger, message);
   }
-  if (telegramTranslator.doTelegramLinksExistInContent(message)) {
+  if (embedTranslator.doTelegramLinksExistInContent(message)) {
     let updatedMsg = ''
     for (i = 0; i < 12; i++) {
       // Sleep before checking embeds
@@ -124,7 +124,7 @@ function processMessageTranslations(message) {
       }
     }
     if (config.translation.telegram) {
-      await telegramTranslator.handleMessage(logger, updatedMsg);
+      await embedTranslator.handleMessage(logger, updatedMsg);
     }
   }
 }
