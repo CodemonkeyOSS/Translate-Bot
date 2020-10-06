@@ -37,6 +37,15 @@ client.on('ready', () => {
   logger.info(`Logged into server as ${client.user.tag}`)
 })
 
+// On Fiery Death, log and attempt another login
+client.on('disconnect', () => {
+  logger.warn(`Terminal disconnect. Attempting reconnection.`)
+  client.login(process.env.DISCORD_TRANSLATE_TOKEN);
+})
+
+// Attempt initial login to kick things off
+client.login(process.env.DISCORD_TRANSLATE_TOKEN)
+
 // On Message
 client.on('message', async function(message) {
 
@@ -71,16 +80,6 @@ client.on('message', async function(message) {
       }
   }
 })
-
-// On Fiery Death, log and attempt another login
-client.on('disconnect', () => {
-  logger.warn(`Terminal disconnect. Attempting reconnection.`)
-  client.login(process.env.DISCORD_TRANSLATE_TOKEN);
-})
-
-// Attempt initial login to kick things off
-client.login(process.env.DISCORD_TRANSLATE_TOKEN)
-
 
 
 
