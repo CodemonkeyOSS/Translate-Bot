@@ -6,8 +6,7 @@
     "translation": {
         "numberOfLanguages": 3,
         "twitter": true,
-        "telegram": true,
-        "anyEmbed": false
+        "anyEmbed": true
     },
     "screwWithNolsters": true
 }

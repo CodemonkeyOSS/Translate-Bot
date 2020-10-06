@@ -2,9 +2,11 @@ var Discord = require('discord.js');
 var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
-var telegramTranslator = require('./translators/telegram');
+var embedTranslator = require('./translators/embeds');
 var messageUtils = require('./utils/message-utils');
 const InsultCompliment = require("insult-compliment");
+const linkParser = require("./utils/link-parser");
+
 const { promisify } = require('util')
 
 const sleep = promisify(setTimeout)
@@ -51,8 +53,10 @@ client.on('message', async function(message) {
   } else {   
       if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
         twitterTranslator.handleMessage(logger, message);
+        // TODO: Improve
+        return
       }
-      if (telegramTranslator.doTelegramLinksExistInContent(message)) {
+      if (linkParser.containsAnyLink(message.content)) {
         let updatedMsg = ''
         for (i = 0; i < 12; i++) {
           // Sleep before checking embeds
@@ -65,8 +69,8 @@ client.on('message', async function(message) {
             break
           }
         }
-        if (config.translation.telegram) {
-          await telegramTranslator.handleMessage(logger, updatedMsg);
+        if (config.translation.anyEmbed) {
+          await embedTranslator.handleMessage(logger, updatedMsg);
         }
       }
   }
