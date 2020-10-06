@@ -75,15 +75,11 @@ client.on('message', async function(message) {
 })
 
 function insult(message, target) {
-  if (!target) message.reply(InsultCompliment.Insult()).then(msg => {
-    msg.delete({timeout: 10000})
-  })
+  if (!target) message.reply(InsultCompliment.Insult())
 }
 
 function compliment(message, target) {
-  if (!target) message.reply(InsultCompliment.Compliment()).then(msg => {
-    msg.delete({timeout: 10000})
-  })
+  if (!target) message.reply(InsultCompliment.Compliment())
 }
 
 async function processMessageTranslations(message) {
