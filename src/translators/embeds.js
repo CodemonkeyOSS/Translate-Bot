@@ -35,14 +35,8 @@ async function handleMessage(logger, message) {
         if (possibleLang == 'en') {
             return
         }
-        
-        let params = {
-            from: possibleLang,
-            to: 'en',
-            key: process.env.GOOGLE_TRANSLATE_KEY
-        }
 
-        console.log(embed)
+        //console.log(embed)
 
         let title = ''
         if (embed.title) {
@@ -57,7 +51,7 @@ async function handleMessage(logger, message) {
             .setColor(0xf542f5)
             .setTitle(title)
             .setDescription(description)
-            .setFooter(`Translated Using Google Cloud Translate with Love from CodeMonkey`)
+            //.setFooter(`Translated Using Google Cloud Translate with Love from CodeMonkey`)
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,
@@ -65,8 +59,12 @@ async function handleMessage(logger, message) {
                 embed.url
             )
         } else if (embed.provider && embed.provider.name) {
-            replyMessage.setAuthor(embed.provider.name)
+            replyMessage.setßAuthor(embed.provider.name)
         }
+        if (embed.url) replyMessage.url = embed.url
+        if (embed.thumbnail) replyMessage.image = embed.thumbnail
+
+        //console.log(replyMessage)
 
         message.reply(replyMessage)
     }
