@@ -1,8 +1,10 @@
 # translate-bot
 
-This project is a Discord bot that listens to a discord server for messages containing twitter links, and responds to them with translated links in english.
+## Shameless Plug
+THis bot was written to support the awesome activities going on in the Project Owl Discord. If you want to see this thing in action, and have an interest in learning more and/or discussing geopolitical events around the globe, come join us! https://discord.gg/projectowl
 
-UNDER DEVELOPMENT
+## Overview
+This project is a Discord bot that listens to a discord server for messages containing twitter links, and responds to them with translated links in english.
 
 ## Configuration
 
