@@ -55,18 +55,35 @@ client.on('message', async function(message) {
   if (message.author.id === client.id) return
 
   if (message.mentions.has(client.user)) {
-    insultOrComplimentCommand(message)
+    insult(message)
+  } else if (message.content.startsWith(config.prefix)) {
+    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
+    
+    if (command == 'insult') {
+      const target = args.shift()
+      insult(message, target)
+    } else if (command == 'compliment') {
+      const target = args.shift()
+      compliment(message, target)
+    } else message.reply("What is so hard about 'insult' or 'compliment'?").then(msg => {
+      msg.delete({timeout: 5000})
+    })
   } else {
     processMessageTranslations(message)
   }
 })
 
-function insultOrComplimentCommand(message) {
-  if (message.author == 251883305362915328) {
-    message.reply(InsultCompliment.Compliment());
-  } else {
-    message.reply(InsultCompliment.Insult());
-  }
+function insult(message, target) {
+  if (!target) message.reply(InsultCompliment.Insult()).then(msg => {
+    msg.delete({timeout: 10000})
+  })
+}
+
+function compliment(message, target) {
+  if (!target) message.reply(InsultCompliment.Compliment()).then(msg => {
+    msg.delete({timeout: 10000})
+  })
 }
 
 async function processMessageTranslations(message) {

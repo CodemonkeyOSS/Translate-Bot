@@ -1,4 +1,5 @@
 {
+    "prefix": "!translate",
     "logger": {
         "level": "debug",
         "file": "./log/translate-bot.log"
