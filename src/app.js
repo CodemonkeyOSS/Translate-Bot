@@ -75,10 +75,12 @@ client.on('message', async function(message) {
 })
 
 function insult(message, target) {
+  if (target) message.reply(target+", "+ InsultCompliment.Insult())
   if (!target) message.reply(InsultCompliment.Insult())
 }
 
 function compliment(message, target) {
+  if (target) message.reply(target+", "+ InsultCompliment.Compliment())
   if (!target) message.reply(InsultCompliment.Compliment())
 }
 
