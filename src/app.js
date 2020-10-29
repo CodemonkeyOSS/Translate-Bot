@@ -103,7 +103,7 @@ async function processMessageTranslations(message) {
         break
       }
     }
-    if (config.translation.telegram) {
+    if (config.translation.anyEmbed) {
       await embedTranslator.handleMessage(logger, updatedMsg);
     }
   }
