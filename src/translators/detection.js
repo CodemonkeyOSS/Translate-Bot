@@ -1,10 +1,15 @@
 const {Translate} = require('@google-cloud/translate').v2;
-const { Message } = require('discord.js');
+const {Message} = require('discord.js');
 var langdetect = require('langdetect');
 
-const projectId = '121843099390';
-
-const translate = new Translate({projectId});
+let options = {
+    projectId: '121843099390',
+    credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_CLIENT_KEY
+    }
+}
+const translate = new Translate(options);
 
 function isMaybeEnglish(text) {
     return langdetect.detectOne(text) == 'en'
