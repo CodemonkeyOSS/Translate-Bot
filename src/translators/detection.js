@@ -16,12 +16,11 @@ function isMaybeEnglish(text) {
 }
 
 async function detectLanguage(text) {
-    let res = await translate.detect(text)
-    let possibleLang = res[0].language
-    if ( possibleLang == 'iw') {
+    let res = await translate(text, {to: 'en'})
+    if ( res.from.language.iso == 'iw') {
         return 'he'
     } else {
-        return possibleLang
+        return res.from.language.iso
     }
 }
 
