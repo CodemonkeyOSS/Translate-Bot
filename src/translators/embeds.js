@@ -33,6 +33,9 @@ function parseHandleAndIdFromLink(url) {
 async function handleMessage(logger, message) {
 
     for (const embed of message.embeds) {
+        if (embed.type != 'article' && embed.type != 'link') return
+        
+        //console.log(embed)
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
         let possibleLang = await detection.detectLanguage(embed.description)
 
