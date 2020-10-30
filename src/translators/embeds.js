@@ -4,13 +4,16 @@ var detection = require('./detection');
 var Discord = require('discord.js');
 const translate = require('translate');
 
-function getDistinctTelegramLinksInContent(msgContent) {
+/**
+ * NOT CURRENTLY IN USE
+function (msgContent) {
     var regex = /https:\/\/(?:www\.)?t\.me\/(?<channel>[a-zA-Z0-9_]+)\/(?<messageId>[0-9]+)/g
     let matches = []
     while((matchItem = regex.exec(msgContent)) != null) {
       matches.push(matchItem.groups)
     }
     matches = [...new Set(matches)]   // Removes any duplicate links if someone is dumb
+    console.log(matches)
     return matches
 }
 
@@ -22,6 +25,7 @@ function parseHandleAndIdFromLink(url) {
     var regex = /https:\/\/(?:www\.)?t\.me\/(?<channel>[a-zA-Z0-9_]+)\/(?<messageId>[0-9]+)/g
     return regex.exec(url).groups
 }
+*/
 
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
@@ -67,6 +71,7 @@ async function handleMessage(logger, message) {
         //console.log(replyMessage)
 
         message.reply(replyMessage)
+        logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=embed, url='+embed.url)
     }
 }
 
@@ -85,5 +90,5 @@ async function checkAndTranslate(text) {
     return await translate(text, params)
 }
 
-exports.doTelegramLinksExistInContent = doTelegramLinksExistInContent;
+//exports.doTelegramLinksExistInContent = doTelegramLinksExistInContent;
 exports.handleMessage = handleMessage;

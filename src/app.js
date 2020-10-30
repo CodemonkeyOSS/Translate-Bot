@@ -89,8 +89,9 @@ function compliment(message, target) {
 async function processMessageTranslations(message) {
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
     twitterTranslator.handleMessage(logger, message);
+    return
   }
-  if (embedTranslator.doTelegramLinksExistInContent(message)) {
+  if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {
     let updatedMsg = ''
     for (i = 0; i < 12; i++) {
       // Sleep before checking embeds
@@ -99,13 +100,14 @@ async function processMessageTranslations(message) {
       // Forcefully check for updated message from API
       updatedMsg = await message.fetch(force=true).then( updatedMsg => { return updatedMsg })
       if (updatedMsg.embeds.length > 0) {
-        logger.info("Finally got out of the loop") 
+        logger.debug("Finally got out of the loop") 
         break
       }
     }
-    if (config.translation.anyEmbed) {
+    if (updatedMsg.embeds.length > 0) {
       await embedTranslator.handleMessage(logger, updatedMsg);
-    }
+      return;
+    } else logger.debug("[Embeds] No embeds detected")
   }
 }
 

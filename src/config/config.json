@@ -1,7 +1,7 @@
 {
     "prefix": "^translate",
     "logger": {
-        "level": "debug",
+        "level": "info",
         "file": "./log/translate-bot.log"
     },
     "translation": {

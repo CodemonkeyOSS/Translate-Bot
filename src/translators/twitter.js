@@ -113,6 +113,7 @@ async function translateAndSend(logger, message, data) {
               .setFooter(`Translated From Twitter Using Google Cloud Translate`)
           }
           message.reply(replyMessage)
+          logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
         })
        }
     })
