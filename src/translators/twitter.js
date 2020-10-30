@@ -60,7 +60,8 @@ function handleMessage(logger, message) {
   var twitterLinks = getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
       twitterLinks.forEach( data => {
-          translateAndSend(logger, message, data)
+        logger.info('[TWITTER RQ] server='+message.channel.guild.name+', source=twitter, user='+data.handle+', id='+data.status_id)
+        translateAndSend(logger, message, data)
       })
   } else {
       return
@@ -110,7 +111,7 @@ async function translateAndSend(logger, message, data) {
                 "____________________",
                 dateUtils.prettyPrintDate(jsonResponse.created_at)
               )
-              .setFooter(`Translated From Twitter Using Google Cloud Translate`)
+              .setFooter(`Translated with love by CodeMonkey`)
           }
           message.reply(replyMessage)
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
