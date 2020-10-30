@@ -33,14 +33,13 @@ function parseHandleAndIdFromLink(url) {
 async function handleMessage(logger, message) {
 
     for (const embed of message.embeds) {
+        logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
         let possibleLang = await detection.detectLanguage(embed.description)
 
         logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
             return
         }
-
-        //console.log(embed)
 
         let title = ''
         if (embed.title) {
@@ -55,7 +54,7 @@ async function handleMessage(logger, message) {
             .setColor(0xf542f5)
             .setTitle(title)
             .setDescription(description)
-            //.setFooter(`Translated Using Google Cloud Translate with Love from CodeMonkey`)
+            .setFooter(`Translated with love by CodeMonkey`)
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,
@@ -71,7 +70,7 @@ async function handleMessage(logger, message) {
         //console.log(replyMessage)
 
         message.reply(replyMessage)
-        logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=embed, url='+embed.url)
+        logger.info('[EMBED RESULT] server='+message.channel.guild.name+', source=embed, url='+embed.url)
     }
 }
 
