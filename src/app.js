@@ -3,7 +3,6 @@ var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
-var messageUtils = require('./utils/message-utils');
 const InsultCompliment = require("insult-compliment");
 const linkParser = require("./utils/link-parser");
 
