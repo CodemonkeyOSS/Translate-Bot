@@ -111,7 +111,7 @@ async function translateAndSend(logger, message, data) {
                 "____________________",
                 dateUtils.prettyPrintDate(jsonResponse.created_at)
               )
-              .setFooter(`Translated from something with love by CodeMonkey`)
+              .setFooter('Translated from '+possibleLang+' with love by CodeMonkey')
           }
           message.reply(replyMessage)
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)

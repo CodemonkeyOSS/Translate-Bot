@@ -57,7 +57,7 @@ async function handleMessage(logger, message) {
             .setColor(0xf542f5)
             .setTitle(title)
             .setDescription(description)
-            .setFooter(`Translated from something with love by CodeMonkey`)
+            .setFooter('Translated from '+possibleLang+' with love by CodeMonkey')
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,
