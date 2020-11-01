@@ -108,7 +108,7 @@ async function processMessageTranslations(message) {
       }
     }
     if (updatedMsg.embeds.length > 0) {
-      await embedTranslator.handleMessage(logger, updatedMsg);
+      await embedTranslator.handleMessage(logger, translate, updatedMsg);
       return;
     } else logger.debug("[Embeds] No embeds detected")
   }

@@ -1,43 +1,18 @@
-var dateUtils = require('../utils/date-utils');
-var linkParser = require('../utils/link-parser');
-var detection = require('./detection');
 var Discord = require('discord.js');
-const translate = require('translate');
-
-/**
- * NOT CURRENTLY IN USE
-function (msgContent) {
-    var regex = /https:\/\/(?:www\.)?t\.me\/(?<channel>[a-zA-Z0-9_]+)\/(?<messageId>[0-9]+)/g
-    let matches = []
-    while((matchItem = regex.exec(msgContent)) != null) {
-      matches.push(matchItem.groups)
-    }
-    matches = [...new Set(matches)]   // Removes any duplicate links if someone is dumb
-    console.log(matches)
-    return matches
-}
-
-function doTelegramLinksExistInContent(msg) {
-    return getDistinctTelegramLinksInContent(msg.content).length > 0
-}
-
-function parseHandleAndIdFromLink(url) {
-    var regex = /https:\/\/(?:www\.)?t\.me\/(?<channel>[a-zA-Z0-9_]+)\/(?<messageId>[0-9]+)/g
-    return regex.exec(url).groups
-}
-*/
+const DetectionService = require('./detection');
 
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-async function handleMessage(logger, message) {
+async function handleMessage(logger, translate, message) {
 
     for (const embed of message.embeds) {
         if (embed.type != 'article' && embed.type != 'link') return
         
-        //console.log(embed)
+        const detectionService = new DetectionService({translate})
+
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
-        let possibleLang = await detection.detectLanguage(embed.description)
+        let possibleLang = await detectionService.detectLanguage(embed.description)
 
         logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
@@ -46,11 +21,11 @@ async function handleMessage(logger, message) {
 
         let title = ''
         if (embed.title) {
-            title = await checkAndTranslate(embed.title)
+            title = await checkAndTranslate(detectionService, translate, embed.title)
         }
         let description = ''
         if (embed.description) {
-            description = await checkAndTranslate(embed.description)
+            description = await checkAndTranslate(detectionService, translate, embed.description)
         }
 
         var replyMessage = new Discord.MessageEmbed()
@@ -77,19 +52,14 @@ async function handleMessage(logger, message) {
     }
 }
 
-async function checkAndTranslate(text) {
-    let possibleLang = await detection.detectLanguage(text)
+async function checkAndTranslate(detectionService, translate, text) {
+    let possibleLang = await detectionService.detectLanguage(text)
     if (possibleLang == 'en') {
         return text
     }
-    
-    let params = {
-        from: possibleLang,
-        to: 'en',
-        key: process.env.GOOGLE_TRANSLATE_KEY
-    }
 
-    return await translate(text, params)
+    const res = await translate.translate(text, 'en')
+    return res[0]
 }
 
 //exports.doTelegramLinksExistInContent = doTelegramLinksExistInContent;
