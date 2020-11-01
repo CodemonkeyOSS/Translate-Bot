@@ -3,11 +3,10 @@ var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
+const {Translate} = require('@google-cloud/translate').v2;
 const InsultCompliment = require("insult-compliment");
 const linkParser = require("./utils/link-parser");
-
 const { promisify } = require('util')
-
 const sleep = promisify(setTimeout)
 
 /**
@@ -17,15 +16,20 @@ const logger = Winston.createLogger({
   level: config.logger.level,
   format: Winston.format.simple(),
   transports: [
-    new Winston.transports.File({ filename: config.logger.file })
+    new Winston.transports.Console({ format: Winston.format.simple() })
   ]
 })
 
-if (process.env.HEROKU == 'enabled'){
-  logger.add(new Winston.transports.Console({
-    format: Winston.format.simple()
-  }))
-}
+/**
+ * Create translator instance
+ */
+const translate = new Translate({
+  projectId: '121843099390',
+  credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_CLIENT_KEY
+  }
+});
 
 /**
  * Setup the client and it's event methods.
@@ -87,7 +91,7 @@ function compliment(message, target) {
 
 async function processMessageTranslations(message) {
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
-    twitterTranslator.handleMessage(logger, message);
+    twitterTranslator.handleMessage(logger, translate, message);
     return
   }
   if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {

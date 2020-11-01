@@ -3,7 +3,7 @@ var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
 var detection = require('./detection');
 var Discord = require('discord.js');
-const translate = require('translate');
+const DetectionService = require('./detection');
 
 /**
  * Setup twitter client so we can talk to twitter API
@@ -42,26 +42,15 @@ function doTwitterLinksExistInContent(msg) {
    return getDistinctTwitterLinksInContent(msg.content).length > 0
 }
 
-function isTweetCompletelyFuckingUseless(text) {
-    let topMatches = lngDetector.detect(text, 2)
-    //logger.debug(topMatches)
-    for (const item of topMatches) {
-      if ( item[0] === null ) {
-        return true
-      }
-    }
-    return false
-  }
-
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
-function handleMessage(logger, message) {
+function handleMessage(logger, translate, message) {
   var twitterLinks = getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
       twitterLinks.forEach( data => {
         logger.debug('[TWITTER RQ] server='+message.channel.guild.name+', source=twitter, user='+data.handle+', id='+data.status_id)
-        translateAndSend(logger, message, data)
+        translateAndSend(logger, translate, message, data)
       })
   } else {
       return
@@ -71,7 +60,7 @@ function handleMessage(logger, message) {
 /*
   Meat and taters function
 */
-async function translateAndSend(logger, message, data) {
+async function translateAndSend(logger, translate, message, data) {
     twitter.get(`statuses/show.json?id=` + data.status_id, { tweet_mode:"extended"}, async function(error, tweets, response) {
       if(error) {
         logger.error("Error communicating with twitter: "+error);
@@ -83,36 +72,33 @@ async function translateAndSend(logger, message, data) {
           logger.debug("Tweet contains only a link, ignoring.")
           return
         }
+
+        const detectionService = new DetectionService({translate})
   
         // Process language metadata and decide on source language
-        let possibleLang = await detection.detectLanguage(jsonResponse.full_text)
+        let possibleLang = jsonResponse.lang !== 'en' ? jsonResponse.lang : await detectionService.detectLanguage(jsonResponse.full_text)
         logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en') {
           return
         }
-        let params = {
-          from: possibleLang,
-          to: 'en',
-          key: process.env.GOOGLE_TRANSLATE_KEY
-        }
         
-        translate(tweets.full_text, params).then(res => {
-          var translated = res
-          if (jsonResponse.hasOwnProperty(jsonResponse.entities.media) == false) {
-            var replyMessage = new Discord.MessageEmbed()
-              .setColor(0x00afff)
-              .setAuthor(
-                jsonResponse.user.name + " (@" + jsonResponse.user.screen_name + ")",
-                jsonResponse.user.profile_image_url,
-                "https://twitter.com/" + jsonResponse.user.screen_name + "/status/" + jsonResponse.id_str
-              )
-              .setDescription(translated)
-              .addField(
-                "____________________",
-                dateUtils.prettyPrintDate(jsonResponse.created_at)
-              )
-              .setFooter('Translated from '+possibleLang+' with love by CodeMonkey')
-          }
+        translate.translate(tweets.full_text, 'en').then(res => {
+          console.log(jsonResponse)
+          var translated = res[1].data.translations[0]
+          var replyMessage = new Discord.MessageEmbed()
+            .setColor(0x00afff)
+            .setAuthor(
+              jsonResponse.user.name + " (@" + jsonResponse.user.screen_name + ")",
+              jsonResponse.user.profile_image_url,
+              "https://twitter.com/" + jsonResponse.user.screen_name + "/status/" + jsonResponse.id_str
+            )
+            .setDescription(translated.translatedText)
+            .addField(
+              "____________________",
+              dateUtils.prettyPrintDate(jsonResponse.created_at)
+            )
+            .setFooter('Translated from '+translated.detectedSourceLanguage+' with love by CodeMonkey')
+
           message.reply(replyMessage)
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
         })
