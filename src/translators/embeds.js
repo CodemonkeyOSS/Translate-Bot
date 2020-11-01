@@ -1,4 +1,5 @@
 var Discord = require('discord.js');
+var iso6391 = require('iso-639-1');
 const DetectionService = require('./detection');
 
 /**
@@ -32,7 +33,7 @@ async function handleMessage(logger, translate, message) {
             .setColor(0xf542f5)
             .setTitle(title)
             .setDescription(description)
-            .setFooter('Translated from '+possibleLang+' with love by CodeMonkey')
+            .setFooter('Translated from '+iso6391.getName(possibleLang)+' with love by CodeMonkey')
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,

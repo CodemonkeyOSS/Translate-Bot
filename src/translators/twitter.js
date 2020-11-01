@@ -1,7 +1,7 @@
 var Twitter = require('twitter');
 var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
-var detection = require('./detection');
+var iso6391 = require('iso-639-1');
 var Discord = require('discord.js');
 const DetectionService = require('./detection');
 
@@ -96,7 +96,7 @@ async function translateAndSend(logger, translate, message, data) {
               "____________________",
               dateUtils.prettyPrintDate(jsonResponse.created_at)
             )
-            .setFooter('Translated from '+translated.detectedSourceLanguage+' with love by CodeMonkey')
+            .setFooter('Translated from '+iso6391.getName(translated.detectedSourceLanguage)+' with love by CodeMonkey')
 
           message.reply(replyMessage)
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
