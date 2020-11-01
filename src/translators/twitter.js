@@ -83,7 +83,6 @@ async function translateAndSend(logger, translate, message, data) {
         }
         
         translate.translate(tweets.full_text, 'en').then(res => {
-          console.log(jsonResponse)
           var translated = res[1].data.translations[0]
           var replyMessage = new Discord.MessageEmbed()
             .setColor(0x00afff)
