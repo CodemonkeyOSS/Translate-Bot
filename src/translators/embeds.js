@@ -16,7 +16,7 @@ async function handleMessage(logger, translate, message) {
         let possibleLang = await detectionService.detectLanguage(embed.description)
 
         logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
-        if (possibleLang == 'en') {
+        if (possibleLang == 'en' || possibleLang == 'und') {
             return
         }
 
