@@ -80,9 +80,10 @@ async function translateAndSend(logger, translate, message, data) {
         // let possibleLang = jsonResponse.lang !== 'en' ? jsonResponse.lang : await detectionService.detectLanguage(jsonResponse.full_text)
         let possibleLang = await detectionService.detectLanguage(jsonResponse.full_text)
         logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
-        if (possibleLang == 'en') {
+        if (possibleLang == 'en' || possibleLang == 'und') {
           return
         }
+           
         
         translate.translate(tweets.full_text, 'en').then(res => {
           var translated = res[1].data.translations[0]
