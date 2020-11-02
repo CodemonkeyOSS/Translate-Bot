@@ -99,7 +99,7 @@ async function translateAndSend(logger, translate, message, data) {
             .setFooter('Translated from '+iso6391.getName(translated.detectedSourceLanguage)+' with love by CodeMonkey')
 
           message.reply(replyMessage)
-          logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
+          logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+possibleLang+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
         })
        }
     })
