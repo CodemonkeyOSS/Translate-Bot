@@ -57,7 +57,8 @@ client.on('message', async function(message) {
   if (message.author.id === client.id) return
 
   processMessageTranslations(message)
-};
+})
+
 
 async function processMessageTranslations(message) {
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
