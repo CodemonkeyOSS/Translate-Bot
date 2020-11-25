@@ -4,7 +4,6 @@ var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
 const {Translate} = require('@google-cloud/translate').v2;
-const InsultCompliment = require("insult-compliment");
 const linkParser = require("./utils/link-parser");
 const { promisify } = require('util')
 const sleep = promisify(setTimeout)
@@ -57,37 +56,8 @@ client.on('message', async function(message) {
   // Ignore myself or another bot
   if (message.author.id === client.id) return
 
-  if (message.mentions.has(client.user)) {
-    insult(message)
-  } else if (message.content.startsWith(config.prefix)) {
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-    
-    if (command == 'insult') {
-      const target = args.shift()
-      insult(message, target)
-    } else if (command == 'compliment') {
-      const target = args.shift()
-      compliment(message, target)
-    } else message.reply("What is so hard about 'insult' or 'compliment'?").then(msg => {
-      msg.delete({timeout: 5000})
-    })
-  } else {
-    processMessageTranslations(message)
-  }
-})
-
-function insult(message, target) {
-  message.author = null
-  if (target) message.reply(target+", "+ InsultCompliment.Insult())
-  if (!target) message.reply(InsultCompliment.Insult())
-}
-
-function compliment(message, target) {
-  message.author = null
-  if (target) message.reply(target+", "+ InsultCompliment.Compliment())
-  if (!target) message.reply(InsultCompliment.Compliment())
-}
+  processMessageTranslations(message)
+};
 
 async function processMessageTranslations(message) {
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
