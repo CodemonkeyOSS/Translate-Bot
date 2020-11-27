@@ -75,7 +75,6 @@ async function processMessageTranslations(message) {
 
     // Check rate limiter
     let isLimited = rateLimiter.takeAndCheck(message.channel.id)
-    rateLimiter.getRemainingWindow(message.channel.id)
     if (isLimited) {
       message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
           .then( msg => { msg.delete({timeout: 5000}) })

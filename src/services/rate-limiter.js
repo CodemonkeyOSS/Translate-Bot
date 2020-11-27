@@ -24,10 +24,6 @@ class RateLimitService {
         
         return false
     }
-
-    getRemainingWindow(key) {
-        if (this.limiters[key]) console.log(this.limiters[key])
-    }
 }
 
 module.exports = RateLimitService;
