@@ -1,3 +1,5 @@
+var langdetect = require('langdetect');
+
 class DetectionService {
     constructor({ translate }) {
         this.translate = translate;
@@ -11,6 +13,14 @@ class DetectionService {
         } else {
             return lang
         }
+    }
+
+    isMaybeEnglishOffline(text) {
+        let result = langdetect.detect(text)
+        for (var lang in result) {
+            if (lang.lang == 'en') return true
+        }
+        return false
     }
 }
 
