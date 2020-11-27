@@ -5,7 +5,7 @@
         "file": "./log/translate-bot.log"
     },
     "rateLimit": {
-        "amount": 6,
+        "amount": 3,
         "window": "minute"
     },
     "translation": {

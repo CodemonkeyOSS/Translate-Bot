@@ -15,6 +15,7 @@ class RateLimitService {
         // Create limiter if it does not exist for key
         if (!this.limiters[key]) { this.limiters[key] = new RateLimiter(this.amount, this.duration, true) }
 
+        console.log(`key: ${key}, remaining: ${this.limiters[key].getTokensRemaining()}`)
         if (this.limiters[key].getTokensRemaining() < 1) {
             return true
         } else {
