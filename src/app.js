@@ -5,6 +5,7 @@ var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
 const {Translate} = require('@google-cloud/translate').v2;
 const linkParser = require("./utils/link-parser");
+const RateLimitService = require('./services/rate-limiter');
 const { promisify } = require('util')
 const sleep = promisify(setTimeout)
 
@@ -31,15 +32,18 @@ const translate = new Translate({
 });
 
 /**
+ * Start rate limiter service
+ */
+const rateLimiter = new RateLimitService(
+  config.rateLimit.amount, 
+  config.rateLimit.window
+);
+
+/**
  * Setup the client and it's event methods.
  * Add handling for whenever we disconnet
  */
 const client = new Discord.Client();
-
-// On Ready
-client.on('ready', () => {
-  logger.info(`Logged into server as ${client.user.tag}`)
-})
 
 // On Fiery Death, log and attempt another login
 client.on('disconnect', () => {
@@ -50,22 +54,40 @@ client.on('disconnect', () => {
 // Attempt initial login to kick things off
 client.login(process.env.DISCORD_TRANSLATE_TOKEN)
 
+// On Ready, log out needed info before we begin.
+client.on('ready', () => {
+  logger.info(`Rate limiter configured for ${config.rateLimit.amount} messages per ${config.rateLimit.window} per channel.`)
+  logger.info(`Logged into server as ${client.user.tag}`)
+})
+
 // On Message
 client.on('message', async function(message) {
 
   // Ignore myself or another bot
-  if (message.author.id === client.id) return
+  if (message.author.id === client.id || message.author.bot) return
 
   processMessageTranslations(message)
 })
 
-
 async function processMessageTranslations(message) {
+  
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
-    twitterTranslator.handleMessage(logger, translate, message);
+
+    // Check rate limiter
+    let isLimited = rateLimiter.takeAndCheck(message.channel.id)
+    rateLimiter.getRemainingWindow(message.channel.id)
+    if (isLimited) {
+      message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
+          .then( msg => { msg.delete({timeout: 5000}) })
+    } else {
+      twitterTranslator.handleMessage(logger, translate, message);
+    }
+
     return
   }
+
   if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {
+
     let updatedMsg = ''
     for (i = 0; i < 12; i++) {
       // Sleep before checking embeds
@@ -78,9 +100,20 @@ async function processMessageTranslations(message) {
         break
       }
     }
+
     if (updatedMsg.embeds.length > 0) {
-      await embedTranslator.handleMessage(logger, translate, updatedMsg);
-      return;
+
+      // Check rate limiter
+      let isLimited = rateLimiter.takeAndCheck(message.channel.id)
+      if (isLimited) {
+        message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
+            .then( msg => { msg.delete({timeout: 5000}) })
+      } else {
+        embedTranslator.handleMessage(logger, translate, updatedMsg)
+      }
+
+      return
+      
     } else logger.debug("[Embeds] No embeds detected")
   }
 }

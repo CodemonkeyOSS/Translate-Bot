@@ -3,7 +3,7 @@ var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
 var iso6391 = require('iso-639-1');
 var Discord = require('discord.js');
-const DetectionService = require('./detection');
+const DetectionService = require('../services/detection');
 
 /**
  * Setup twitter client so we can talk to twitter API

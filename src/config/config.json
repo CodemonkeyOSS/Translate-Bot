@@ -4,10 +4,13 @@
         "level": "info",
         "file": "./log/translate-bot.log"
     },
+    "rateLimit": {
+        "amount": 3,
+        "window": "minute"
+    },
     "translation": {
         "numberOfLanguages": 3,
         "twitter": true,
         "anyEmbed": true
-    },
-    "screwWithNolsters": true
+    }
 }

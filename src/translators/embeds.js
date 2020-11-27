@@ -1,6 +1,6 @@
 var Discord = require('discord.js');
 var iso6391 = require('iso-639-1');
-const DetectionService = require('./detection');
+const DetectionService = require('../services/detection');
 
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
