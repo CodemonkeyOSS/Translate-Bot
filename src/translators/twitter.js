@@ -84,7 +84,7 @@ async function translateAndSend(logger, translate, message, data) {
         // Process language metadata and decide on source language
         // TODO: Maybe fix this later and see if we can smartly choose the source language without hitting detection API
         // let possibleLang = jsonResponse.lang !== 'en' ? jsonResponse.lang : await detectionService.detectLanguage(jsonResponse.full_text)
-        let possibleLang = "" 
+        let possibleLang = null 
         if (detectionService.isMaybeEnglishOffline(jsonResponse.full_text)) {
           possibleLang = 'en'
         } else {
