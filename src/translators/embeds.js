@@ -54,7 +54,12 @@ async function handleMessage(logger, translate, message) {
 }
 
 async function checkAndTranslate(detectionService, translate, text) {
-    let possibleLang = await detectionService.detectLanguage(text)
+    let possibleLang = "" 
+    if (detectionService.isMaybeEnglishOffline(text)) {
+        possibleLang = 'en'
+    } else {
+        possibleLang = await detectionService.detectLanguage(text)
+    }
     if (possibleLang == 'en') {
         return text
     }
