@@ -76,6 +76,7 @@ async function processMessageTranslations(message) {
     // Check rate limiter
     let isLimited = rateLimiter.takeAndCheck(message.channel.id)
     if (isLimited) {
+      logger.warn(`[RATE_LIMIT] server=${message.channel.guild.name}, channel=${message.channel.name}`)
       message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
           .then( msg => { msg.delete({timeout: 5000}) })
     } else {
@@ -105,6 +106,7 @@ async function processMessageTranslations(message) {
       // Check rate limiter
       let isLimited = rateLimiter.takeAndCheck(message.channel.id)
       if (isLimited) {
+        logger.warn(`[RATE_LIMIT] server=${message.channel.guild.name}, channel=${message.channel.name}`)
         message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
             .then( msg => { msg.delete({timeout: 5000}) })
       } else {
