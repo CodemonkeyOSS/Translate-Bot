@@ -6,8 +6,10 @@ class DetectionService {
     }
 
     async detectLanguage(text) {
-        let res = await this.translate.detect(text)
-        let lang = res[0].language
+        // Hold on detecting with GCP for now
+        //let res = await this.translate.detect(text)
+        let res = langdetect.detect(text)
+        let lang = res[0].lang
         if ( lang == 'iw') {
             return 'he'
         } else {
