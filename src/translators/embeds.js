@@ -10,7 +10,7 @@ async function handleMessage(logger, translate, message) {
     for (const embed of message.embeds) {
         if (embed.type != 'article' && embed.type != 'link') return
         
-        const detectionService = new DetectionService({translate})
+        const detectionService = new DetectionService(process.env.DL_KEY)
 
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
         let possibleLang = await detectionService.detectLanguage(embed.description)

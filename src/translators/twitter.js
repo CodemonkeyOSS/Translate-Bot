@@ -76,7 +76,7 @@ async function translateAndSend(logger, translate, message, data) {
           return
         }
 
-        const detectionService = new DetectionService({translate})
+        const detectionService = new DetectionService(process.env.DL_KEY)
 
         // Process language metadata and decide on source language
         // TODO: Maybe fix this later and see if we can smartly choose the source language without hitting detection API

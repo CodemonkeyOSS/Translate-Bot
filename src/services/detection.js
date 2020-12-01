@@ -1,15 +1,14 @@
 var langdetect = require('langdetect');
+var DetectLanguage = require('detectlanguage');
 
 class DetectionService {
-    constructor({ translate }) {
-        this.translate = translate;
+    constructor(dl_key) {
+        this.detectLang = new DetectLanguage(dl_key);
     }
 
     async detectLanguage(text) {
-        // Hold on detecting with GCP for now
-        //let res = await this.translate.detect(text)
-        let res = langdetect.detect(text)
-        let lang = res[0].lang
+        let res = await this.detectLang.detect(text)
+        let lang = res[0].language
         if ( lang == 'iw') {
             return 'he'
         } else {
