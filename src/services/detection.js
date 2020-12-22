@@ -11,6 +11,9 @@ class DetectionService {
         let lang = res[0].language
         if ( lang == 'iw') {
             return 'he'
+        } else if (lang == 'la') {
+            // This is weird, but the detection service returns latin on '@' handles and emoji rich tweets. Let's black hole this until later.
+            return 'en'
         } else {
             return lang
         }
