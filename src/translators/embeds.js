@@ -7,17 +7,29 @@ const DetectionService = require('../services/detection');
  */
 async function handleMessage(logger, translate, message) {
 
+    const detectionService = new DetectionService(process.env.DL_KEY)
+
     for (const embed of message.embeds) {
         if (embed.type != 'article' && embed.type != 'link') return
         
-        const detectionService = new DetectionService(process.env.DL_KEY)
-
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
-        let possibleLang = await detectionService.detectLanguage(embed.description)
+
+        let possibleLang = ""
+        let missingDescription = false
+        
+        if (embed.description) {
+            possibleLang = await detectionService.detectLanguage(embed.description)
+        } else if (embed.title) {
+            // Sets conditional flags for triggering the msg reply
+            possibleLang = await detectionService.detectLanguage(embed.title)
+            missingDescription = true
+        }
 
         logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
         if (possibleLang == 'en' || possibleLang == 'und') {
             return
+        } else if (missingDescription) {
+            message.reply(`Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`)
         }
 
         let title = ''
