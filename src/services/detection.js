@@ -8,7 +8,16 @@ class DetectionService {
 
     async detectLanguage(text) {
         let res = await this.detectLang.detect(text)
-        let lang = res[0].language
+
+        let lang = ''
+
+        if (res[0].confidence < 10) {
+            // Check if english is in top three since first result wasn't very confident.
+            if (this.isEnglishTopThree(res)) { lang = 'en' } else { lang = res[0].language }
+        } else {
+            if (lang == '' && res[0].isReliable) { lang = res[0].language } else { throw "unreliable" }
+        }
+        
         if ( lang == 'iw') {
             return 'he'
         } else if (lang == 'la') {
@@ -17,6 +26,15 @@ class DetectionService {
         } else {
             return lang
         }
+    }
+
+    isEnglishTopThree(detections) {
+        var i;
+        var limit = Math.min(3, detections.length)
+        for (i = 0; i < limit; i++) {
+            if (detections[i].language == 'en') return true
+        }
+        return false
     }
 
     isMaybeEnglishOffline(text) {
