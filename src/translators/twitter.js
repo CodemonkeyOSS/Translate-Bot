@@ -82,16 +82,24 @@ async function translateAndSend(logger, translate, message, data) {
         // TODO: Maybe fix this later and see if we can smartly choose the source language without hitting detection API
         // let possibleLang = jsonResponse.lang !== 'en' ? jsonResponse.lang : await detectionService.detectLanguage(jsonResponse.full_text)
         let possibleLang = null 
-        if (detectionService.isMaybeEnglishOffline(jsonResponse.full_text)) {
-          possibleLang = 'en'
-        } else {
-          possibleLang = await detectionService.detectLanguage(jsonResponse.full_text)
+        try {
+          if (detectionService.isMaybeEnglishOffline(jsonResponse.full_text)) {
+            possibleLang = 'en'
+          } else {
+            possibleLang = await detectionService.detectLanguage(jsonResponse.full_text)
+          }
+          logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
+          if (possibleLang == 'en' || possibleLang == 'und') {
+            return
+          }
+        } catch (e) {
+          if (e == "unreliable") {
+            message.reply(`the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`).then(msg => {
+              msg.delete({timeout: 10000})
+            })
+            return
+          }
         }
-        logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
-        if (possibleLang == 'en' || possibleLang == 'und') {
-          return
-        }
-           
         
         translate.translate(tweets.full_text, 'en').then(res => {
           var translated = res[1].data.translations[0]
