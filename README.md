@@ -1,5 +1,8 @@
 # translate-bot
 ![Node.js CI](https://github.com/CodemonkeyOSS/interpret-bot/workflows/Node.js%20CI/badge.svg)
+[![Patreon](https://img.shields.io/badge/patreon-donate-orange.svg)](https://www.patreon.com/codemonkeyoss)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](LICENSE)
+
 
 ## Shameless Plug
 This bot was written to support the awesome activities going on in the Project Owl Discord. If you want to see this thing in action, and have an interest in learning more and/or discussing geopolitical events around the globe, come join us! https://discord.gg/projectowl
