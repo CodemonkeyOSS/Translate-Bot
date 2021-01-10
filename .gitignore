@@ -3,3 +3,4 @@ node_modules/
 src/config/auth.json
 src/log/*
 log/*
+package-lock.json
