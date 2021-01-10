@@ -1,4 +1,5 @@
 # translate-bot
+![Node.js CI](https://github.com/CodemonkeyOSS/interpret-bot/workflows/Node.js%20CI/badge.svg)
 
 ## Shameless Plug
 This bot was written to support the awesome activities going on in the Project Owl Discord. If you want to see this thing in action, and have an interest in learning more and/or discussing geopolitical events around the globe, come join us! https://discord.gg/projectowl
