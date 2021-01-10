@@ -24,7 +24,7 @@ const logger = Winston.createLogger({
  * Create translator instance
  */
 const translate = new Translate({
-  projectId: '121843099390',
+  projectId: process.env.GOOGLE_PROJECT_ID,
   credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
       private_key: process.env.GOOGLE_CLIENT_KEY
@@ -35,7 +35,7 @@ const translate = new Translate({
  * Start rate limiter service
  */
 const rateLimiter = new RateLimitService(
-  config.rateLimit.amount, 
+  config.rateLimit.amount,
   config.rateLimit.window
 );
 
