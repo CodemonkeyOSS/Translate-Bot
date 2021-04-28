@@ -49,13 +49,14 @@ async function handleMessage(logger, translate, message) {
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,
+                embed.thumbnail.url,
                 embed.url
             )
         } else if (embed.provider && embed.provider.name) {
             replyMessage.setAuthor(embed.provider.name)
         }
         if (embed.url) replyMessage.url = embed.url
-        if (embed.thumbnail) replyMessage.image = embed.thumbnail
+        //if (embed.thumbnail) replyMessage.image = embed.thumbnail
 
         //console.log(replyMessage)
 
