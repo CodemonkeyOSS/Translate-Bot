@@ -49,7 +49,6 @@ async function handleMessage(logger, translate, message) {
         if (embed.author) {
             replyMessage.setAuthor(
                 embed.author.name,
-                embed.thumbnail.url,
                 embed.url
             )
         } else if (embed.provider && embed.provider.name) {
