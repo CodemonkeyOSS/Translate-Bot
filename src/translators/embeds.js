@@ -30,6 +30,7 @@ async function handleMessage(logger, translate, message) {
             return
         } else if (missingDescription) {
             message.reply(`Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`)
+            return
         }
 
         let title = ''
