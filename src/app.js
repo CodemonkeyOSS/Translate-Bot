@@ -43,7 +43,7 @@ const rateLimiter = new RateLimitService(
  * Setup the client and it's event methods.
  * Add handling for whenever we disconnet
  */
-const client = new Discord.Client();
+const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 
 // On Fiery Death, log and attempt another login
 client.on('disconnect', () => {
@@ -61,7 +61,7 @@ client.on('ready', () => {
 })
 
 // On Message
-client.on('message', async function(message) {
+client.on('messageCreate', async function(message) {
 
   // Ignore myself or another bot
   if (message.author.id === client.id || message.author.bot) return
