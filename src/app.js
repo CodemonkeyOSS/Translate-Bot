@@ -43,7 +43,7 @@ const rateLimiter = new RateLimitService(
  * Setup the client and it's event methods.
  * Add handling for whenever we disconnet
  */
-const client = new Discord.Client();
+const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 
 // On Fiery Death, log and attempt another login
 client.on('disconnect', () => {
@@ -61,7 +61,7 @@ client.on('ready', () => {
 })
 
 // On Message
-client.on('message', async function(message) {
+client.on('messageCreate', async function(message) {
 
   // Ignore myself or another bot
   if (message.author.id === client.id || message.author.bot) return
@@ -77,7 +77,7 @@ async function processMessageTranslations(message) {
     let isLimited = rateLimiter.takeAndCheck(message.channel.id)
     if (isLimited) {
       logger.warn(`[RATE_LIMIT] server=${message.channel.guild.name}, channel=${message.channel.name}`)
-      message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
+      message.reply({ content: "This channel is cooling off on translations and will resume shortly. Thanks for your patience!"})
           .then( msg => { msg.delete({timeout: 5000}) })
     } else {
       twitterTranslator.handleMessage(logger, translate, message);
@@ -107,7 +107,7 @@ async function processMessageTranslations(message) {
       let isLimited = rateLimiter.takeAndCheck(message.channel.id)
       if (isLimited) {
         logger.warn(`[RATE_LIMIT] server=${message.channel.guild.name}, channel=${message.channel.name}`)
-        message.reply("This channel is cooling off on translations and will resume shortly. Thanks for your patience!")
+        message.reply({ content: "This channel is cooling off on translations and will resume shortly. Thanks for your patience!" })
             .then( msg => { msg.delete({timeout: 5000}) })
       } else {
         embedTranslator.handleMessage(logger, translate, updatedMsg)

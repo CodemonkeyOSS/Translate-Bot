@@ -8,6 +8,7 @@ const DetectionService = require('../services/detection');
 async function handleMessage(logger, translate, message) {
 
     const detectionService = new DetectionService(process.env.DL_KEY)
+    logger.info(process.env.DL_KEY)
 
     for (const embed of message.embeds) {
         if (embed.type != 'article' && embed.type != 'link') return
@@ -32,7 +33,7 @@ async function handleMessage(logger, translate, message) {
         if (possibleLang == 'en' || possibleLang == 'und') {
             return
         } else if (missingDescription) {
-            message.reply(`Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`)
+            message.reply({ content: `Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`})
             return
         }
 
@@ -60,11 +61,8 @@ async function handleMessage(logger, translate, message) {
             replyMessage.setAuthor(embed.provider.name)
         }
         if (embed.url) replyMessage.url = embed.url
-        //if (embed.thumbnail) replyMessage.image = embed.thumbnail
 
-        //console.log(replyMessage)
-
-        message.reply(replyMessage)
+        message.reply({ embeds: [replyMessage]})
         logger.info('[EMBED RESULT] server='+message.channel.guild.name+', source=embed, url='+embed.url)
     }
 }
