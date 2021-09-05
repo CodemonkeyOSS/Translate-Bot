@@ -94,7 +94,7 @@ async function translateAndSend(logger, translate, message, data) {
           }
         } catch (e) {
           if (e == "unreliable") {
-            message.reply(`the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`).then(msg => {
+            message.reply({ content: `the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`}).then(msg => {
               msg.delete({timeout: 10000})
             })
             return
@@ -103,7 +103,7 @@ async function translateAndSend(logger, translate, message, data) {
         
         translate.translate(tweets.full_text, 'en').then(res => {
           var translated = res[1].data.translations[0]
-          var replyMessage = new Discord.MessageEmbed()
+          var embed = new Discord.MessageEmbed()
             .setColor(0x00afff)
             .setAuthor(
               jsonResponse.user.name + " (@" + jsonResponse.user.screen_name + ")",
@@ -117,7 +117,7 @@ async function translateAndSend(logger, translate, message, data) {
             )
             .setFooter('Translated from '+iso6391.getName(translated.detectedSourceLanguage)+' with love by CodeMonkey')
 
-          message.reply(replyMessage)
+          message.reply({ embeds: [embed]})
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+possibleLang+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
         })
        }
