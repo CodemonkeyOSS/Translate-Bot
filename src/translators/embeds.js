@@ -29,7 +29,6 @@ async function handleMessage(logger, translate, message) {
                 logger.debug('[EMBED] No-op embed detected, returning early.')
                 return
             }
-
             logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
             if (possibleLang == 'en' || possibleLang == 'und') {
                 return
