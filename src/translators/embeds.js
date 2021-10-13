@@ -18,24 +18,36 @@ async function handleMessage(logger, translate, message) {
         let possibleLang = ""
         let missingDescription = false
 
-        if (embed.description) {
-            possibleLang = await detectionService.detectLanguage(embed.description)
-        } else if (embed.title) {
-            // Sets conditional flags for triggering the msg reply
-            possibleLang = await detectionService.detectLanguage(embed.title)
-            missingDescription = true
-        } else {
-            logger.debug('[EMBED] No-op embed detected, returning early.')
-            return
-        }
+        try {
+            if (embed.description) {
+                possibleLang = await detectionService.detectLanguage(embed.description)
+            } else if (embed.title) {
+                // Sets conditional flags for triggering the msg reply
+                possibleLang = await detectionService.detectLanguage(embed.title)
+                missingDescription = true
+            } else {
+                logger.debug('[EMBED] No-op embed detected, returning early.')
+                return
+            }
 
-        logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
-        if (possibleLang == 'en' || possibleLang == 'und' || possibleLang == 'null') {
-            return
-        } else if (missingDescription) {
-            message.reply({ content: `Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`})
-            return
-        }
+            logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
+            if (possibleLang == 'en' || possibleLang == 'und') {
+                return
+            } else if (missingDescription) {
+                message.reply({ content: `Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`})
+                return
+            }
+        } catch (e) {
+            if (e == "UNRELIABLE") {
+              message.reply({ content: `the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`}).then(msg => {
+                msg.delete({timeout: 10000})
+              })
+              return
+            } else if (e == "NO_DETECTION") {
+              logger.warn("Translation service did not detect any language, assuming it was a no-op.")
+              return
+            }
+          }
 
         let title = ''
         if (embed.title) {

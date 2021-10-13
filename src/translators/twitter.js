@@ -87,15 +87,18 @@ async function translateAndSend(logger, translate, message, data) {
             possibleLang = await detectionService.detectLanguage(jsonResponse.full_text)
           }
           logger.debug(`[TWITTER] Language is suspected to be: ${possibleLang}`)
-          // und and null seem to mean the service couldn't quite figure itself out. We will black hole these along with ignoring english.
-          if (possibleLang == 'en' || possibleLang == 'und' || possibleLang == 'null') {
+          // und seems to mean the service couldn't quite figure itself out. We will black hole these along with ignoring english.
+          if (possibleLang == 'en' || possibleLang == 'und') {
             return
           }
         } catch (e) {
-          if (e == "unreliable") {
+          if (e == "UNRELIABLE") {
             message.reply({ content: `the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`}).then(msg => {
               msg.delete({timeout: 10000})
             })
+            return
+          } else if (e == "NO_DETECTION") {
+            logger.warn("Translation service did not detect any language, assuming it was a no-op.")
             return
           }
         }
