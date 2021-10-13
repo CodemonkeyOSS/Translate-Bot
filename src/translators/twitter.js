@@ -103,6 +103,13 @@ async function translateAndSend(logger, translate, message, data) {
         
         translate.translate(tweets.full_text, 'en').then(res => {
           var translated = res[1].data.translations[0]
+
+          var language = iso6391.getName(translated.detectedSourceLanguage)
+          // If Google doesn't give us an discernible iso code (ex - iw is no longer used), fallback to what twitter might tell us.
+          if (language == "") {
+            language = iso6391.getName(possibleLang)
+          }
+
           var embed = new Discord.MessageEmbed()
             .setColor(0x00afff)
             .setAuthor(
@@ -115,7 +122,7 @@ async function translateAndSend(logger, translate, message, data) {
               "____________________",
               dateUtils.prettyPrintDate(jsonResponse.created_at)
             )
-            .setFooter('Translated from '+iso6391.getName(translated.detectedSourceLanguage)+' with love by CodeMonkey')
+            .setFooter('Translated from '+language+' with love by CodeMonkey')
 
           message.reply({ embeds: [embed]})
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+possibleLang+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
