@@ -30,7 +30,7 @@ async function handleMessage(logger, translate, message) {
         }
 
         logger.debug(`[EMBED] Language is suspected to be: ${possibleLang}`)
-        if (possibleLang == 'en' || possibleLang == 'und') {
+        if (possibleLang == 'en' || possibleLang == 'und' || possibleLang == 'null') {
             return
         } else if (missingDescription) {
             message.reply({ content: `Sorry friend, but ${embed.title} has no description so there is nothing I can translate here.`})
