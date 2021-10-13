@@ -8,14 +8,16 @@ class DetectionService {
 
     async detectLanguage(text) {
         let res = await this.detectLang.detect(text)
-
+        
         let lang = ''
+
+        if (!res[0]) { throw "NO_DETECTION" }
 
         if (res[0].confidence < 10) {
             // Check if english is in top three since first result wasn't very confident.
             if (this.isEnglishTopThree(res)) { lang = 'en' } else { lang = res[0].language }
         } else {
-            if (lang == '' && res[0].isReliable) { lang = res[0].language } else { throw "unreliable" }
+            if (lang == '' && res[0].isReliable) { lang = res[0].language } else { throw "UNRELIABLE" }
         }
         
         if ( lang == 'iw') {
