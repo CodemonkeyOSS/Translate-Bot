@@ -13,13 +13,20 @@ class DetectionService {
 
         if (!res[0]) { throw "NO_DETECTION" }
 
-        // Feels hacky, but this will defer to the first detected translation if confidence exceeds 10.0, 
-        // or if the first confidence is marginally higher than the second one...
-        if (res[0].confidence < 10 || res[0].confidence > (res[1].confidence * 1.5)) {
+        // If first result is reliable, let's give it a try anyway
+        if (res[0].isReliable) {
+            lang = res[0].language
+        } else if (res[0].confidence < 10) {
             // Check if english is in top three since first result wasn't very confident.
-            if (this.isEnglishTopThree(res)) { lang = 'en' } else { lang = res[0].language }
+            if (this.isEnglishTopThree(res)) {
+                lang = 'en' 
+            } else { 
+                lang = res[0].language 
+            }
+        } else if (lang == '' && res[0].isReliable) { 
+            lang = res[0].language
         } else {
-            if (lang == '' && res[0].isReliable) { lang = res[0].language } else { throw "UNRELIABLE" }
+            throw "UNRELIABLE" 
         }
         
         if ( lang == 'iw') {
