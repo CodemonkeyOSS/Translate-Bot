@@ -107,6 +107,11 @@ async function translateAndSend(logger, translate, message, data) {
         translate.translate(tweets.full_text, 'en').then(res => {
           var translated = res[1].data.translations[0]
 
+          if (translated.detectedSourceLanguage == 'en') {
+            logger.error("GCT thinks this is already English, so we wasted a translation.")
+            return
+          }
+
           var language = iso6391.getName(translated.detectedSourceLanguage)
           // If Google doesn't give us an discernible iso code (ex - iw is no longer used), fallback to what twitter might tell us.
           if (language == "") {
@@ -128,7 +133,7 @@ async function translateAndSend(logger, translate, message, data) {
             .setFooter('Translated from '+language+' with love by CodeMonkey')
 
           message.reply({ embeds: [embed]})
-          logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+possibleLang+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
+          logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+language+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
         })
        }
     })
