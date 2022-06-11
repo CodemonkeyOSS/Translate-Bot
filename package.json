@@ -14,7 +14,7 @@
     "dateformat": "^3.0.3",
     "detectlanguage": "^2.1.0",
     "discord-api-types": "^0.22.0",
-    "discord.js": "^13.1.0",
+    "discord.js": "^13.8.0",
     "eslint": "^7.32.0",
     "google-auth-library": "^7.9.1",
     "insult-compliment": "^1.1.4",
@@ -27,9 +27,9 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "mocha": "^8.2.1"
+    "mocha": "^10.0.0"
   },
   "engines": {
-    "node": "16.6.x"
+    "node": "16.15.x"
   }
 }
