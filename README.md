@@ -1,6 +1,6 @@
 # translate-bot
 ![Node.js CI](https://github.com/CodemonkeyOSS/interpret-bot/workflows/Node.js%20CI/badge.svg)
-![CodeQL](https://github.com/CodeMonkeyOSS/interpret-bot/workflows/codeql.yml/badge.svg)
+[![CodeQL](https://github.com/CodemonkeyOSS/Translate-Bot/actions/workflows/codeql.yml/badge.svg)](https://github.com/CodemonkeyOSS/Translate-Bot/actions/workflows/codeql.yml)
 [![Patreon](https://img.shields.io/badge/patreon-donate-orange.svg)](https://www.patreon.com/codemonkeyoss)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
