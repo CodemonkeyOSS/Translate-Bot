@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/rest": "^0.4.1",
     "@google-cloud/translate": "^6.2.7",
     "dateformat": "^3.0.3",
     "detectlanguage": "^2.1.0",
