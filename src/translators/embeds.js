@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 var iso6391 = require('iso-639-1');
 const DetectionService = require('../services/detection');
 
@@ -8,10 +8,9 @@ const DetectionService = require('../services/detection');
 async function handleMessage(logger, translate, message) {
 
     const detectionService = new DetectionService(process.env.DL_KEY)
-    logger.info(process.env.DL_KEY)
 
     for (const embed of message.embeds) {
-        if (embed.type != 'article' && embed.type != 'link') return
+        if (embed.data.type != 'article' && embed.data.type != 'link') return
         
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
 
@@ -49,32 +48,32 @@ async function handleMessage(logger, translate, message) {
           }
 
         let title = ''
-        if (embed.title) {
-            title = await checkAndTranslate(detectionService, translate, embed.title)
+        if (embed.data.title) {
+            title = await checkAndTranslate(detectionService, translate, embed.data.title)
         }
         let description = ''
-        if (embed.description) {
-            description = await checkAndTranslate(detectionService, translate, embed.description)
+        if (embed.data.description) {
+            description = await checkAndTranslate(detectionService, translate, embed.data.description)
         }
 
-        var replyMessage = new Discord.MessageEmbed()
+        var replyEmbed = new EmbedBuilder()
             .setColor(0xf542f5)
             .setTitle(title)
             .setDescription(description)
-            .setFooter('Translated from '+iso6391.getName(possibleLang)+' with love by CodeMonkey')
-        if (embed.author) {
-            replyMessage.setAuthor(
-                embed.author.name,
-                embed.thumbnail.url,
-                embed.url
-            )
-        } else if (embed.provider && embed.provider.name) {
-            replyMessage.setAuthor(embed.provider.name)
+            .setFooter({ text: 'Translated from '+iso6391.getName(possibleLang)+' with love by CodeMonkey' })
+        if (embed.data.author) {
+            replyEmbed.setAuthor({
+                name: embed.data.author.name,
+                iconURL: embed.data.thumbnail.url,
+                url: embed.data.url
+            })
+        } else if (embed.data.provider && embed.data.provider.name) {
+            replyEmbed.setAuthor({ name: embed.data.provider.name })
         }
-        if (embed.url) replyMessage.url = embed.url
+        if (embed.data.url) replyEmbed.url = embed.data.url
 
-        message.reply({ embeds: [replyMessage]})
-        logger.info('[EMBED RESULT] server='+message.channel.guild.name+', source=embed, url='+embed.url)
+        message.reply({ embeds: [replyEmbed]})
+        logger.info('[EMBED RESULT] server='+message.channel.guild.name+', source=embed, url='+embed.data.url)
     }
 }
 
