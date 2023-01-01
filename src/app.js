@@ -1,8 +1,8 @@
-var Discord = require('discord.js');
 var Winston = require('winston');
 var config = require('./config/config.json');
 var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
+const { Client, GatewayIntentBits } = require('discord.js');
 const {Translate} = require('@google-cloud/translate').v2;
 const linkParser = require("./utils/link-parser");
 const RateLimitService = require('./services/rate-limiter');
@@ -43,7 +43,13 @@ const rateLimiter = new RateLimitService(
  * Setup the client and it's event methods.
  * Add handling for whenever we disconnet
  */
-const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds, 
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ] 
+});
 
 // On Fiery Death, log and attempt another login
 client.on('disconnect', () => {

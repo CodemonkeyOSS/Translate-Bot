@@ -2,7 +2,7 @@ var Twitter = require('twitter');
 var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
 var iso6391 = require('iso-639-1');
-var Discord = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const DetectionService = require('../services/detection');
 
 /**
@@ -118,19 +118,18 @@ async function translateAndSend(logger, translate, message, data) {
             language = iso6391.getName(possibleLang)
           }
 
-          var embed = new Discord.MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(0x00afff)
-            .setAuthor(
-              jsonResponse.user.name + " (@" + jsonResponse.user.screen_name + ")",
-              jsonResponse.user.profile_image_url,
-              "https://twitter.com/" + jsonResponse.user.screen_name + "/status/" + jsonResponse.id_str
-            )
+            .setAuthor({
+              name: jsonResponse.user.name + " (@" + jsonResponse.user.screen_name + ")",
+              iconURL: jsonResponse.user.profile_image_url,
+              url: "https://twitter.com/" + jsonResponse.user.screen_name + "/status/" + jsonResponse.id_str
+            })
             .setDescription(translated.translatedText)
-            .addField(
-              "____________________",
-              dateUtils.prettyPrintDate(jsonResponse.created_at)
+            .addFields(
+              { name: "Published On", value: dateUtils.prettyPrintDate(jsonResponse.created_at) }
             )
-            .setFooter('Translated from '+language+' with love by CodeMonkey')
+            .setFooter({ text: 'Translated from '+language+' with love by CodeMonkey'})
 
           message.reply({ embeds: [embed]})
           logger.info('[TRANSLATION] server='+message.channel.guild.name+', source=twitter, srcLanguage='+language+', user='+jsonResponse.user.screen_name+', id='+jsonResponse.id_str)
