@@ -1,6 +1,6 @@
 var Winston = require('winston');
 var config = require('./config/config.json');
-var twitterTranslator = require('./translators/twitter');
+// var twitterTranslator = require('./translators/twitter');
 var embedTranslator = require('./translators/embeds');
 const { Client, GatewayIntentBits } = require('discord.js');
 const {Translate} = require('@google-cloud/translate').v2;
@@ -77,6 +77,11 @@ client.on('messageCreate', async function(message) {
 
 async function processMessageTranslations(message) {
   
+  // Due to twitter's API shenanigans, I cannot afford keep the twitter-API based route active
+  // This code is commented in the hopes that Discord is willing to pay for embed privileges on their side.
+  // Otherwise, this bot is hosed. GG bois.
+
+  /**
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
 
     // Check rate limiter
@@ -91,6 +96,7 @@ async function processMessageTranslations(message) {
 
     return
   }
+  */
 
   if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {
 
