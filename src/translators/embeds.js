@@ -10,7 +10,6 @@ async function handleMessage(logger, translate, message) {
     const detectionService = new DetectionService(process.env.DL_KEY)
 
     for (const embed of message.embeds) {
-        console.log(embed)
         let supported = ["article", "link", "rich"]
         if (!supported.includes(embed.data.type)) return
         
