@@ -8,6 +8,12 @@
 ## Shameless Plug
 This bot was written to support the awesome activities going on in the Project Owl Discord. If you want to see this thing in action, and have an interest in learning more and/or discussing geopolitical events around the globe, come join us! https://discord.gg/projectowl
 
+# Important Note
+
+Unfortunately, due to Twitter's API pricing changes in 2023, I am unable to continue to pay (both financially and morally) for twitter's API access. For this reason, I have commented out the codepath that called the Twitter API, and regrettably have diverted twitter handling to the embed processor at this time. Folks are welcome to fork and uncomment the code, but I will not be using it going forward.
+
+GG BOIS.
+
 ## Overview
 This project is a Discord bot that listens to a discord server for messages containing links, and responds to them with translated links in english with a formatted embedded message.
 

@@ -132,7 +132,7 @@ async function translateAndSend(logger, translate, message, data) {
     var language = iso6391.getName(translated.detectedSourceLanguage)
     // If Google doesn't give us an discernible iso code (ex - iw is no longer used), fallback to what twitter might tell us.
     if (language == "") {
-      language = iso6391.getName(possibleLang)
+      language = iso6391.getName(tweetData.lang)
     }
 
     const embed = new EmbedBuilder()

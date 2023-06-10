@@ -78,6 +78,7 @@ async function processMessageTranslations(message) {
   // This code is commented in the hopes that Discord is willing to pay for embed privileges on their side.
   // Otherwise, this bot is hosed. GG bois.
 
+  /**
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
 
     // Check rate limiter
@@ -92,6 +93,7 @@ async function processMessageTranslations(message) {
 
     return
   }
+  */
 
   if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {
 
