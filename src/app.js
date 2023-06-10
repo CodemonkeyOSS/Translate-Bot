@@ -25,10 +25,7 @@ const logger = Winston.createLogger({
  */
 const translate = new Translate({
   projectId: process.env.GOOGLE_PROJECT_ID,
-  credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_CLIENT_KEY
-  }
+  key: process.env.GOOGLE_CLIENT_KEY
 });
 
 /**

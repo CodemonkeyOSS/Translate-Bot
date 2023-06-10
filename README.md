@@ -29,13 +29,11 @@ The bot will rely on a few environment variables being available to work properl
 | --- | --- | --- |
 | Discord Bot API Token | DISCORD_TRANSLATE_TOKEN | https://www.writebots.com/discord-bot-token/ |
 | Google Cloud Project ID | GOOGLE_PROJECT_ID | --- |
-| Google Cloud Client Email | GOOGLE_CLIENT_EMAIL | --- |
 | Google Cloud Client Key | GOOGLE_CLIENT_KEY | --- |
-| Twitter Bearer Token | TWITTER_BEARER_TOKEN | --- |
 | DetectLanguage API Key | DL_KEY | https://detectlanguage.com/ | 
 
 The bot can be run with 
-`DISCORD_TRANSLATE_TOKEN=$DISCORD_TRANSLATE_TOKEN DL_KEY=$DL_KEY GOOGLE_PROJECT_ID=$GOOGLE_PROJECT_ID GOOGLE_CLIENT_EMAIL=$GOOGLE_CLIENT_EMAIL GOOGLE_CLIENT_KEY=$GOOGLE_CLIENT_KEY GOOGLE_TRANSLATE_KEY=$GOOGLE_TRANSLATE_KEY TWITTER_BEARER_TOKEN=$TWITTER_BEARER_TOKEN node src/app.js`
+`DISCORD_TRANSLATE_TOKEN=$DISCORD_TRANSLATE_TOKEN DL_KEY=$DL_KEY GOOGLE_PROJECT_ID=$GOOGLE_PROJECT_ID GOOGLE_CLIENT_KEY=$GOOGLE_CLIENT_KEY node src/app.js`
 
 ### Configuration values
 All configurations for the bot are kept in src/config/config.json (except the log format). There is an example-config.json you can copy to get started, but tune parameters as needed for logging and such.
