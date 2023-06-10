@@ -25,10 +25,7 @@ const logger = Winston.createLogger({
  */
 const translate = new Translate({
   projectId: process.env.GOOGLE_PROJECT_ID,
-  credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_CLIENT_KEY
-  }
+  key: process.env.GOOGLE_CLIENT_KEY
 });
 
 /**
@@ -81,7 +78,6 @@ async function processMessageTranslations(message) {
   // This code is commented in the hopes that Discord is willing to pay for embed privileges on their side.
   // Otherwise, this bot is hosed. GG bois.
 
-  /**
   if (twitterTranslator.doTwitterLinksExistInContent(message) && config.translation.twitter) {
 
     // Check rate limiter
@@ -96,7 +92,6 @@ async function processMessageTranslations(message) {
 
     return
   }
-  */
 
   if (config.translation.anyEmbed && linkParser.containsAnyLink(message.content)) {
 
