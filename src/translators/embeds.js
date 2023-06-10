@@ -10,7 +10,9 @@ async function handleMessage(logger, translate, message) {
     const detectionService = new DetectionService(process.env.DL_KEY)
 
     for (const embed of message.embeds) {
-        if (embed.data.type != 'article' && embed.data.type != 'link') return
+        console.log(embed)
+        let supported = ["article", "link", "rich"]
+        if (!supported.includes(embed.data.type)) return
         
         logger.info('[EMBED RQ] server='+message.channel.guild.name+', url="'+embed.url+'"')
 
@@ -58,17 +60,14 @@ async function handleMessage(logger, translate, message) {
 
         var replyEmbed = new EmbedBuilder()
             .setColor(0xf542f5)
-            .setTitle(title)
-            .setDescription(description)
-            .setFooter({ text: 'Translated from '+iso6391.getName(possibleLang)+' with love by CodeMonkey' })
+        if (title.length > 0) { replyEmbed.setTitle(title) }
+        replyEmbed.setDescription(description)
+        replyEmbed.setFooter({ text: 'Translated from '+iso6391.getName(possibleLang)+' with love by CodeMonkey' })
         if (embed.data.author) {
             replyEmbed.setAuthor({
                 name: embed.data.author.name,
-                iconURL: embed.data.thumbnail.url,
                 url: embed.data.url
             })
-        } else if (embed.data.provider && embed.data.provider.name) {
-            replyEmbed.setAuthor({ name: embed.data.provider.name })
         }
         if (embed.data.url) replyEmbed.url = embed.data.url
 
