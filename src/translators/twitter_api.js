@@ -2,51 +2,28 @@ const { TwitterApi } = require('twitter-api-v2');
 const util = require('util');
 var dateUtils = require('../utils/date-utils');
 var linkParser = require('../utils/link-parser');
+var twitterUtils = require('../utils/twitter-utils');
 var iso6391 = require('iso-639-1');
 const { EmbedBuilder } = require('discord.js');
 const DetectionService = require('../services/detection');
 
 /**
+ * NOTE: This part of the code should be unused presently, due to Twitter's API shenanigans.
+ * Alas, I am a man of self-inflicted undue hope, and so I am retaining this path should
+ * the option become viable again in the future to use this.
+ */
+
+/**
  * Setup twitter client so we can talk to twitter API
  */
 const twitter = new TwitterApi(process.env.TWITTER_BEARER_TOKEN);
-  
-/**
- * getDistinctTwitterLinksInContent is self explanatory. It literally checks a message and if it has a twitter link, it extracts it.
- * 
- * NOTE: The regex is configured to ignore any line that starts with '>', so as to ignore quoted text and reduce translation cost and noise.
- * 
- * Returns a set of potential matches
- * An empty set is akin to "no results"
- */
-//TODO Support multiple links by putting all links into an array
-function getDistinctTwitterLinksInContent(msgContent) {
-    var regex = /^(?!\>).*https:\/\/(?:www\.)?(?:mobile\.)?twitter\.com\/(?<handle>[a-zA-Z0-9_]+)\/status\/(?<status_id>[0-9]+)/gm
-    let matches = []
-    while((matchItem = regex.exec(msgContent)) != null) {
-      matches.push(matchItem.groups)
-    }
-    matches = [...new Set(matches)]   // Removes any duplicate links if someone is dumb
-    return matches
-}
-
-/**
- * isDistinctTwitterLinksInContent is self explanatory. It literally checks a message and if it has a twitter link, it extracts it.
- * 
- * Returns a set of potential matches
- * An empty set is akin to "no results"
- */
-//TODO Support multiple links by putting all links into an array
-function doTwitterLinksExistInContent(msg) {
-   return getDistinctTwitterLinksInContent(msg.content).length > 0
-}
 
 /**
  * Primary function, handles processing the message and sending back any translations on the original channel id
  */
 function handleMessage(logger, translate, message) {
   logger.debug("text is:\n\n"+message.content+"\n\n")
-  var twitterLinks = getDistinctTwitterLinksInContent(message.content)
+  var twitterLinks = twitterUtils.getDistinctTwitterLinksInContent(message.content)
   if (twitterLinks.length > 0) {
       twitterLinks.forEach( data => {
         logger.debug('[TWITTER RQ] server='+message.channel.guild.name+', source=twitter, user='+data.handle+', id='+data.status_id)
@@ -153,6 +130,4 @@ async function translateAndSend(logger, translate, message, data) {
   })
 }
 
-exports.doTwitterLinksExistInContent = doTwitterLinksExistInContent;
-exports.getDistinctTwitterLinksInContent = getDistinctTwitterLinksInContent;
 exports.handleMessage = handleMessage;
