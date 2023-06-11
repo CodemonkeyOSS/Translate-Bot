@@ -20,7 +20,7 @@
     "languagedetect": "^2.0.0",
     "limiter": "^2.1.0",
     "translate": "^1.2.3",
-    "twitter-api-v2": "^1.14.0",
+    "twitter-api-v2": "^1.14.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
