@@ -39,7 +39,7 @@ async function handleMessage(logger, translate, message) {
         } catch (e) {
             if (e == "UNRELIABLE") {
               message.reply({ content: `the language detection was unreliable so I can't do anything here. Please report it if you have concerns.`}).then(msg => {
-                msg.delete({timeout: 10000})
+                setTimeout(() => msg.delete(), 10000)
               })
               return
             } else if (e == "NO_DETECTION") {
