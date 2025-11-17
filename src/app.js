@@ -81,7 +81,7 @@ async function processMessageTranslations(message) {
       await sleep(500)
       logger.debug("Embed checker in loop: "+i)
       // Forcefully check for updated message from API
-      updatedMsg = await message.fetch(force=true).then( updatedMsg => { return updatedMsg })
+      updatedMsg = await message.fetch({ force: true }).then( updatedMsg => { return updatedMsg })
       if (updatedMsg.embeds.length > 0) {
         logger.debug("Finally got out of the loop") 
         break
@@ -95,7 +95,7 @@ async function processMessageTranslations(message) {
       if (isLimited) {
         logger.warn(`[RATE_LIMIT] server=${message.channel.guild.name}, channel=${message.channel.name}`)
         message.reply({ content: "This channel is cooling off on translations and will resume shortly. Thanks for your patience!" })
-            .then( msg => { msg.delete({timeout: 5000}) })
+            .then( msg => { setTimeout(() => msg.delete(), 5000) })
       } else {
         embedTranslator.handleMessage(logger, translate, updatedMsg)
       }
