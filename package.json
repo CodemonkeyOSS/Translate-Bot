@@ -21,7 +21,7 @@
     "limiter": "^2.1.0",
     "translate": "^3.0.0",
     "twitter-api-v2": "^1.14.0",
-    "winston": "^3.3.3"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "mocha": "^10.2.0"
