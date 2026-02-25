@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/translate": "^8.0.2",
+    "@google-cloud/translate": "^8.5.1",
     "dateformat": "^3.0.3",
     "detectlanguage": "^2.1.0",
     "discord.js": "^14.24.2",
