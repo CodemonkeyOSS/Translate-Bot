@@ -11,7 +11,7 @@
   "dependencies": {
     "@google-cloud/translate": "^8.0.2",
     "dateformat": "^3.0.3",
-    "detectlanguage": "^2.1.0",
+    "detectlanguage": "^3.0.0",
     "discord.js": "^14.24.2",
     "eslint": "^9.0.0",
     "google-auth-library": "^9.0.0",
